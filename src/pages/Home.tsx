@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Card, CardBody, CardHeader, Image, Chip, Progress, Tabs, Tab } from '@heroui/react';
+import { Button, Card, CardBody, Image, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
+import InteractiveCard from '../components/InteractiveCard';
+import AnimatedSkillBar from '../components/AnimatedSkillBar';
+import CertificationCard from '../components/CertificationCard';
+import AnimatedCounter from '../components/AnimatedCounter';
+import TestimonialCarousel from '../components/TestimonialCarousel';
+import NeonButton from '../components/NeonButton';
+import FloatingParticles from '../components/FloatingParticles';
 
 // Neon color palette
 const neonColors = {
@@ -167,8 +174,6 @@ const testimonials = [
 
 const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [animatedStats, setAnimatedStats] = useState({ projects: 0, clients: 0, years: 0, certs: 0 });
   
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
@@ -188,75 +193,14 @@ const Home: React.FC = () => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   
-  // Auto-rotate testimonials
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-  
-  // Animate stats when in view
-  useEffect(() => {
-    if (statsInView) {
-      const duration = 2000;
-      const steps = 60;
-      const increment = {
-        projects: stats[0].number / steps,
-        clients: stats[1].number / steps,
-        years: stats[2].number / steps,
-        certs: stats[3].number / steps
-      };
-      
-      let currentStep = 0;
-      const timer = setInterval(() => {
-        currentStep++;
-        setAnimatedStats({
-          projects: Math.min(Math.round(increment.projects * currentStep), stats[0].number),
-          clients: Math.min(Math.round(increment.clients * currentStep), stats[1].number),
-          years: Math.min(Math.round(increment.years * currentStep), stats[2].number),
-          certs: Math.min(Math.round(increment.certs * currentStep), stats[3].number)
-        });
-        
-        if (currentStep >= steps) {
-          clearInterval(timer);
-        }
-      }, duration / steps);
-      
-      return () => clearInterval(timer);
-    }
-  }, [statsInView]);
-  
   const filteredProjects = selectedCategory === 'all' 
     ? projects 
     : projects.filter(project => project.category === selectedCategory);
   
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Animated Background Particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-gradient-to-r from-green-400 to-lime-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              x: [0, Math.random() * 200 - 100],
-              y: [0, Math.random() * 200 - 100],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 10 + Math.random() * 20,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              delay: Math.random() * 5,
-            }}
-          />
-        ))}
-      </div>
+      {/* Enhanced Animated Background Particles */}
+      <FloatingParticles count={25} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
       
       {/* Hero Section */}
       <motion.div 
@@ -334,45 +278,22 @@ const Home: React.FC = () => {
                   animate={heroInView ? { y: 0, opacity: 1 } : {}}
                   transition={{ delay: 0.6, duration: 0.8 }}
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <NeonButton 
+                    icon="lucide:rocket"
+                    color={neonColors.neonGreen}
+                    href="/projects"
                   >
-                    <Button 
-                      as={Link}
-                      to="/projects"
-                      size="lg"
-                      className="px-8 py-4 text-lg font-semibold text-black"
-                      style={{ 
-                        backgroundColor: neonColors.neonGreen,
-                        boxShadow: `0 0 30px ${neonColors.neonGreen}`
-                      }}
-                    >
-                      <Icon icon="lucide:rocket" className="mr-2" />
-                      View Projects
-                    </Button>
-                  </motion.div>
+                    View Projects
+                  </NeonButton>
                   
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <NeonButton 
+                    icon="lucide:user"
+                    color={neonColors.lime}
+                    variant="bordered"
+                    href="/services"
                   >
-                    <Button 
-                      as={Link}
-                      to="/services"
-                      size="lg"
-                      variant="bordered"
-                      className="px-8 py-4 text-lg font-semibold border-2"
-                      style={{ 
-                        borderColor: neonColors.lime,
-                        color: neonColors.lightYellow,
-                        boxShadow: `0 0 20px ${neonColors.lime}`
-                      }}
-                    >
-                      <Icon icon="lucide:user" className="mr-2" />
-                      Hire Me
-                    </Button>
-                  </motion.div>
+                    Hire Me
+                  </NeonButton>
                 </motion.div>
                 
                 <motion.div 
@@ -500,43 +421,15 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <motion.div
+              <InteractiveCard
                 key={index}
-                initial={{ y: 50, opacity: 0 }}
-                animate={featuresInView ? { y: 0, opacity: 1 } : {}}
-                transition={{ delay: 0.3 + index * 0.1, duration: 0.8 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card 
-                  className="h-full bg-gray-900/50 backdrop-blur-sm border-2 hover:shadow-2xl transition-all duration-300 group"
-                  style={{ borderColor: feature.color }}
-                >
-                  <CardBody className="p-6 text-center">
-                    <motion.div
-                      className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: feature.color }}
-                      whileHover={{ scale: 1.1, rotate: 360 }}
-                      transition={{ type: 'spring', stiffness: 300 }}
-                    >
-                      <Icon icon={feature.icon} className="w-8 h-8 text-black" />
-                    </motion.div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: feature.color }}>
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                      {feature.description}
-                    </p>
-                    <div className="space-y-2">
-                      {feature.highlights.map((highlight, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <Icon icon="lucide:check" className="w-4 h-4" style={{ color: feature.color }} />
-                          <span className="text-xs text-gray-400">{highlight}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardBody>
-                </Card>
-              </motion.div>
+                title={feature.title}
+                description={feature.description}
+                icon={feature.icon}
+                highlights={feature.highlights}
+                color={feature.color}
+                delay={0.3 + index * 0.1}
+              />
             ))}
           </div>
         </div>
@@ -557,32 +450,15 @@ const Home: React.FC = () => {
             animate={statsInView ? { y: 0, opacity: 1 } : {}}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            {[
-              { number: animatedStats.projects, label: 'Projects Completed', icon: 'lucide:briefcase' },
-              { number: animatedStats.clients, label: 'Happy Clients', icon: 'lucide:users' },
-              { number: animatedStats.years, label: 'Years Experience', icon: 'lucide:calendar' },
-              { number: animatedStats.certs, label: 'Certifications', icon: 'lucide:award' }
-            ].map((stat, index) => (
-              <motion.div
+            {stats.map((stat, index) => (
+              <AnimatedCounter
                 key={index}
-                className="text-center"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-              >
-                <div 
-                  className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                  style={{
-                    background: `linear-gradient(135deg, ${neonColors.neonGreen}, ${neonColors.lime})`,
-                    boxShadow: `0 0 30px ${neonColors.neonGreen}`
-                  }}
-                >
-                  <Icon icon={stat.icon} className="w-8 h-8 text-black" />
-                </div>
-                <div className="text-4xl font-bold mb-2" style={{ color: neonColors.lightYellow }}>
-                  {stat.number}+
-                </div>
-                <div className="text-gray-300 text-sm">{stat.label}</div>
-              </motion.div>
+                target={stat.number}
+                label={stat.label}
+                icon={stat.icon}
+                color={neonColors.neonGreen}
+                delay={0.2 + index * 0.1}
+              />
             ))}
           </motion.div>
         </div>
@@ -623,43 +499,14 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {skills.map((skill, index) => (
-              <motion.div
+              <AnimatedSkillBar
                 key={index}
-                initial={{ y: 50, opacity: 0 }}
-                animate={skillsInView ? { y: 0, opacity: 1 } : {}}
-                transition={{ delay: 0.3 + index * 0.05, duration: 0.8 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-green-500 transition-all duration-300">
-                  <CardBody className="p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div 
-                        className="w-10 h-10 rounded-lg flex items-center justify-center"
-                        style={{ backgroundColor: neonColors.neonGreen }}
-                      >
-                        <Icon icon={skill.icon} className="w-5 h-5 text-black" />
-                      </div>
-                      <h3 className="font-semibold text-white">{skill.name}</h3>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Proficiency</span>
-                        <span style={{ color: neonColors.lightYellow }}>{skill.level}%</span>
-                      </div>
-                      <Progress 
-                        value={skill.level} 
-                        size="sm"
-                        className="h-2"
-                        color="success"
-                        style={{
-                          background: '#1a1a1a',
-                          boxShadow: `0 0 10px ${neonColors.neonGreen}`
-                        }}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </motion.div>
+                name={skill.name}
+                icon={skill.icon}
+                level={skill.level}
+                color={neonColors.neonGreen}
+                delay={0.3 + index * 0.05}
+              />
             ))}
           </div>
         </div>
@@ -787,6 +634,58 @@ const Home: React.FC = () => {
         </div>
       </motion.div>
 
+      {/* Certifications Showcase */}
+      <motion.div 
+        className="relative z-10 py-20"
+        style={{
+          background: `linear-gradient(135deg, ${neonColors.darkGreen}20, ${neonColors.neonGreen}10, ${neonColors.lime}20)`
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span style={{ color: neonColors.lightYellow }}>Professional</span>{' '}
+              <span 
+                style={{ 
+                  background: `linear-gradient(135deg, ${neonColors.neonGreen}, ${neonColors.lime})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                Certifications
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Industry-recognized certifications validating expertise in cybersecurity, cloud architecture, and development.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {certifications.map((cert, index) => (
+              <CertificationCard
+                key={index}
+                name={cert.name}
+                issuer={cert.issuer}
+                date={cert.date}
+                credentialId={cert.credentialId}
+                icon={cert.icon}
+                color={cert.color}
+                delay={0.3 + index * 0.1}
+              />
+            ))}
+          </div>
+        </div>
+      </motion.div>
+
       {/* Testimonials Section */}
       <motion.div 
         ref={testimonialsRef}
@@ -823,58 +722,10 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
           
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTestimonial}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
-            >
-              <Card className="bg-gray-900/50 backdrop-blur-sm border-2" style={{ borderColor: neonColors.neonGreen }}>
-                <CardBody className="p-8">
-                  <div className="flex items-start gap-6">
-                    <div className="text-6xl">{testimonials[currentTestimonial].avatar}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-4">
-                        {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                          <Icon key={i} icon="lucide:star" className="w-5 h-5" style={{ color: neonColors.lightYellow }} />
-                        ))}
-                      </div>
-                      <blockquote className="text-lg text-gray-300 mb-6 italic leading-relaxed">
-                        "{testimonials[currentTestimonial].content}"
-                      </blockquote>
-                      <div>
-                        <div className="font-semibold text-white">{testimonials[currentTestimonial].name}</div>
-                        <div className="text-sm" style={{ color: neonColors.lime }}>
-                          {testimonials[currentTestimonial].role}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
-          </AnimatePresence>
-          
-          {/* Testimonial Navigation */}
-          <div className="flex justify-center gap-2 mt-6">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentTestimonial(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  currentTestimonial === index 
-                    ? 'w-8' 
-                    : ''
-                }`}
-                style={{
-                  backgroundColor: currentTestimonial === index ? neonColors.neonGreen : '#4a4a4a',
-                  boxShadow: currentTestimonial === index ? `0 0 10px ${neonColors.neonGreen}` : 'none'
-                }}
-              />
-            ))}
-          </div>
+          <TestimonialCarousel 
+            testimonials={testimonials}
+            color={neonColors.neonGreen}
+          />
         </div>
       </motion.div>
 
@@ -902,40 +753,22 @@ const Home: React.FC = () => {
               Let's discuss your project and create a solution that exceeds your expectations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <NeonButton 
+                icon="lucide:message-square"
+                color={neonColors.lightYellow}
+                href="/contact"
               >
-                <Button 
-                  as={Link}
-                  to="/contact"
-                  size="lg"
-                  className="px-8 py-4 text-lg font-semibold"
-                  style={{ 
-                    backgroundColor: neonColors.lightYellow,
-                    color: '#000'
-                  }}
-                >
-                  <Icon icon="lucide:message-square" className="mr-2" />
-                  Start a Project
-                </Button>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                Start a Project
+              </NeonButton>
+              
+              <NeonButton 
+                icon="lucide:file-text"
+                color={neonColors.lightYellow}
+                variant="bordered"
+                href="/services"
               >
-                <Button 
-                  as={Link}
-                  to="/services"
-                  size="lg"
-                  variant="bordered"
-                  className="px-8 py-4 text-lg font-semibold border-2 text-white"
-                  style={{ borderColor: neonColors.lightYellow }}
-                >
-                  <Icon icon="lucide:file-text" className="mr-2" />
-                  View Services
-                </Button>
-              </motion.div>
+                View Services
+              </NeonButton>
             </div>
           </motion.div>
         </div>

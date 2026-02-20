@@ -1,230 +1,117 @@
 import React from 'react';
 import { Card, CardHeader, CardBody } from '@heroui/react';
+import { motion } from 'framer-motion';
+import { Icon } from '@iconify/react';
+import NeonButton from '../components/NeonButton';
+import FloatingParticles from '../components/FloatingParticles';
+
+const neonColors = {
+  darkGreen: '#059212',
+  neonGreen: '#06D001',
+  lightYellow: '#F3FF90',
+  lime: '#9BEC00'
+};
 
 const Terms: React.FC = () => {
+  const sections = [
+    {
+      title: 'Acceptance of Terms',
+      icon: 'lucide:check-circle',
+      content: 'By accessing this website, you agree to be bound by these terms.'
+    },
+    {
+      title: 'Services Description',
+      icon: 'lucide:briefcase',
+      content: 'Web development, mobile apps, cybersecurity, data management, and consultation services.'
+    },
+    {
+      title: 'Payment Terms',
+      icon: 'lucide:credit-card',
+      content: '50% upfront, 50% on completion. Payment methods include bank transfer and digital payments.'
+    },
+    {
+      title: 'Refund Policy',
+      icon: 'lucide:refresh-cw',
+      content: 'Refunds available within 7 days for unused services, subject to terms.'
+    },
+    {
+      title: 'Intellectual Property',
+      icon: 'lucide:shield',
+      content: 'Client owns final deliverables. We retain rights to our tools and methodologies.'
+    },
+    {
+      title: 'Confidentiality',
+      icon: 'lucide:lock',
+      content: 'All client information remains confidential and secure.'
+    }
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
-        <p className="text-gray-600 mb-8">Last updated: {new Date().toLocaleDateString()}</p>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <FloatingParticles count={20} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
 
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">1. Acceptance of Terms</h2>
-          </CardHeader>
-          <CardBody>
-            <p>
-              By accessing and using this website and our services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-            </p>
-          </CardBody>
-        </Card>
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ textShadow: `0 0 30px ${neonColors.neonGreen}` }}>
+            <span style={{ color: neonColors.lightYellow }}>Terms &</span>{' '}
+            <span style={{ background: `linear-gradient(135deg, ${neonColors.neonGreen}, ${neonColors.lime})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Conditions
+            </span>
+          </h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+            Clear terms for our professional services and client relationships.
+          </p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: neonColors.neonGreen }}>
+            <Icon icon="lucide:calendar" className="w-4 h-4 text-black" />
+            <span className="text-black font-semibold">
+              Last updated: {new Date().toLocaleDateString()}
+            </span>
+          </div>
+        </motion.div>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">2. Services Description</h2>
-          </CardHeader>
-          <CardBody>
-            <p className="mb-4">We provide the following services:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Web Development and Design</li>
-              <li>Mobile Application Development</li>
-              <li>Cybersecurity and Penetration Testing</li>
-              <li>Data Management and Entry</li>
-              <li>Network Design and Security</li>
-              <li>Event Management Systems</li>
-              <li>Technical Consultation</li>
-            </ul>
-          </CardBody>
-        </Card>
+        <div className="max-w-4xl mx-auto space-y-8">
+          {sections.map((section, index) => (
+            <motion.div key={section.title} initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + index * 0.1 }}>
+              <Card className="bg-gray-900/50 backdrop-blur-sm border-2 hover:shadow-2xl transition-all duration-300" style={{ borderColor: neonColors.neonGreen }}>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4">
+                    <motion.div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: neonColors.neonGreen }} whileHover={{ scale: 1.2, rotate: 360 }}>
+                      <Icon icon={section.icon} className="w-6 h-6 text-black" />
+                    </motion.div>
+                    <motion.h2 className="text-2xl font-bold" style={{ color: neonColors.lightYellow }} whileHover={{ scale: 1.05 }}>
+                      {section.title}
+                    </motion.h2>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  <p className="text-gray-300 leading-relaxed">{section.content}</p>
+                </CardBody>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">3. Payment Terms</h2>
-          </CardHeader>
-          <CardBody>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">Payment Schedule:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>50% upfront payment required to begin work</li>
-                  <li>Remaining 50% due upon project completion</li>
-                  <li>Additional fees may apply for rush projects</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Payment Methods:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>Bank Transfer</li>
-                  <li>Mobile Banking</li>
-                  <li>Digital Payment Platforms</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Late Payments:</h3>
-                <p>A 5% late fee will be applied to payments received after the due date.</p>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">4. Project Terms</h2>
-          </CardHeader>
-          <CardBody>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">Project Timeline:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>Project timelines will be agreed upon before work begins</li>
-                  <li>Delays may occur due to client feedback or scope changes</li>
-                  <li>Rush projects may incur additional fees</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Revisions:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>Two rounds of revisions included in standard packages</li>
-                  <li>Additional revisions may incur extra charges</li>
-                  <li>Major scope changes may require new project quote</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Client Responsibilities:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>Provide timely feedback and approvals</li>
-                  <li>Supply necessary content and materials</li>
-                  <li>Maintain regular communication</li>
-                </ul>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">5. Intellectual Property</h2>
-          </CardHeader>
-          <CardBody>
-            <div className="space-y-4">
-              <p>
-                Upon full payment, clients will own the final deliverables. However, we retain the right to:
+        <motion.div className="mt-16 text-center" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}>
+          <Card className="bg-gray-900/50 backdrop-blur-sm border-2 max-w-2xl mx-auto" style={{ borderColor: neonColors.lime }}>
+            <CardBody className="p-8">
+              <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: neonColors.lightYellow }} animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity }}>
+                <Icon icon="lucide:file-text" className="w-8 h-8 text-black" />
+              </motion.div>
+              <h3 className="text-2xl font-bold mb-4" style={{ color: neonColors.lightYellow }}>
+                Need Clarification?
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Have questions about our terms? We're here to help.
               </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Use the work in our portfolio</li>
-                <li>Display the work for marketing purposes</li>
-                <li>Use the work for educational purposes</li>
-              </ul>
-              <p>
-                Third-party assets (fonts, images, etc.) remain subject to their respective licenses.
-              </p>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">6. Confidentiality</h2>
-          </CardHeader>
-          <CardBody>
-            <p>
-              We maintain strict confidentiality regarding client information and project details. We will not disclose any confidential information to third parties without written consent, except as required by law.
-            </p>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">7. Limitation of Liability</h2>
-          </CardHeader>
-          <CardBody>
-            <p>
-              Our liability is limited to the amount paid for services. We are not liable for any indirect, incidental, or consequential damages arising from the use of our services.
-            </p>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">8. Warranty and Support</h2>
-          </CardHeader>
-          <CardBody>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">Warranty Period:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>30 days warranty on all deliverables</li>
-                  <li>Bug fixes and minor adjustments included</li>
-                  <li>Major changes may require additional payment</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Support:</h3>
-                <ul className="list-disc pl-6 space-y-1">
-                  <li>Support period varies by package</li>
-                  <li>Emergency support available for premium packages</li>
-                  <li>Extended support available for additional fees</li>
-                </ul>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">9. Termination</h2>
-          </CardHeader>
-          <CardBody>
-            <div className="space-y-4">
-              <p>Either party may terminate the agreement with written notice:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Client termination: 50% of remaining balance due</li>
-                <li>Provider termination: Full refund of unused portion</li>
-                <li>Immediate termination for breach of terms</li>
-              </ul>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">10. Governing Law</h2>
-          </CardHeader>
-          <CardBody>
-            <p>
-              These terms are governed by the laws of Bangladesh. Any disputes will be resolved through mediation or arbitration in Dhaka, Bangladesh.
-            </p>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">11. Contact Information</h2>
-          </CardHeader>
-          <CardBody>
-            <p className="mb-4">
-              For questions about these terms, please contact us:
-            </p>
-            <div className="space-y-2">
-              <p><strong>Email:</strong> legal@yeasinedewan.dev</p>
-              <p><strong>Address:</strong> 146/5/a, Bank colony, 60 feet barekmolla mor, mirpur-2, Dhaka, Bangladesh</p>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">12. Changes to Terms</h2>
-          </CardHeader>
-          <CardBody>
-            <p>
-              We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Continued use of our services constitutes acceptance of the modified terms.
-            </p>
-          </CardBody>
-        </Card>
+              <NeonButton icon="lucide:mail" color={neonColors.neonGreen} href="/contact" className="px-8 py-3">
+                Contact Legal Team
+              </NeonButton>
+            </CardBody>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
 };
 
-export default Terms; 
+export default Terms;
