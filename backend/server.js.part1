@@ -1,0 +1,22 @@
+let portfolioRatings = [];
+=======
+
+let messages = [];
+let portfolioRatings = [];
+
+let blogPosts = [
+  { id: 1, title: 'Securing Your Web Application', date: '2024-03-15', status: 'Published', content: 'Content of blog post 1' },
+  { id: 2, title: 'Introduction to Penetration Testing', date: '2024-03-10', status: 'Draft', content: 'Content of blog post 2' },
+  { id: 3, title: 'The Rise of AI in Cybersecurity', date: '2024-03-05', status: 'Published', content: 'Content of blog post 3' },
+];
+
+let projects = [
+  { id: 1, name: 'Project Alpha', description: 'Description of Project Alpha', status: 'Active', startDate: '2024-01-01', endDate: '2024-06-30' },
+  { id: 2, name: 'Project Beta', description: 'Description of Project Beta', status: 'Active', startDate: '2024-02-15', endDate: '2024-08-15' },
+  { id: 3, name: 'Project Gamma', description: 'Description of Project Gamma', status: 'Completed', startDate: '2023-05-01', endDate: '2023-12-31' },
+  { id: 4, name: 'Project Delta', description: 'Description of Project Delta', status: 'Active', startDate: '2024-03-01', endDate: '2024-09-30' },
+  { id: 5, name: 'Project Epsilon', description: 'Description of Project Epsilon', status: 'Active', startDate: '2024-04-01', endDate: '2024-10-31' },
+  { id: 6, name: 'Project Zeta', description: 'Description of Project Zeta', status: 'Active', startDate: '2024-05-01', endDate: '2024-11-30' },
+  { id: 7, name: 'Project Eta', description: 'Description of Project Eta', status: 'Active', startDate: '2024-06-01', endDate: '2024-12-31' },
+  { id: 8, name: 'Project Theta', description: 'Description of Project Theta', status: 'Active', startDate: '2024-07-01', endDate: '2025-01-31' },
+];
