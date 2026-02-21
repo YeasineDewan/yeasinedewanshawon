@@ -54,28 +54,57 @@ const Footer: React.FC = () => {
     <footer 
       className="relative overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, #000000, ${neonColors.darkGreen}20, #000000)`
+        background: `linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)`,
+        borderTop: `3px solid ${neonColors.neonGreen}`,
+        boxShadow: `0 -5px 20px rgba(6, 208, 1, 0.15)`
       }}
     >
-      {/* Animated Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        {[...Array(20)].map((_, i) => (
+      {/* Wave Shape at Top */}
+      <svg
+        className="absolute top-0 left-0 w-full h-16"
+        viewBox="0 0 1200 120"
+        preserveAspectRatio="none"
+        style={{
+          fill: neonColors.neonGreen,
+          opacity: 0.05
+        }}
+      >
+        <motion.path
+          d="M0,56 C150,100 350,0 600,56 C850,112 1050,0 1200,56 L1200,0 L0,0 Z"
+          animate={{
+            d: [
+              "M0,56 C150,100 350,0 600,56 C850,112 1050,0 1200,56 L1200,0 L0,0 Z",
+              "M0,56 C150,0 350,100 600,56 C850,12 1050,100 1200,56 L1200,0 L0,0 Z",
+              "M0,56 C150,100 350,0 600,56 C850,112 1050,0 1200,56 L1200,0 L0,0 Z"
+            ]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </svg>
+      
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 rounded-full"
             style={{
               backgroundColor: neonColors.neonGreen,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 30}%`,
             }}
             animate={{
-              y: [0, -20, 0],
-              opacity: [0.3, 1, 0.3],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 3 + i * 0.5,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: i * 0.3,
               ease: "easeInOut"
             }}
           />

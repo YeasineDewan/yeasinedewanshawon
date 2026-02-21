@@ -40,15 +40,34 @@ const Header: React.FC = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-black/90 backdrop-blur-md border-b' : 'bg-transparent'
+          isScrolled ? 'bg-black/95 backdrop-blur-md' : 'bg-transparent'
         }`}
-        style={{ borderColor: isScrolled ? neonColors.neonGreen : 'transparent' }}
+        style={{
+          borderBottom: isScrolled ? `2px solid ${neonColors.neonGreen}` : 'none',
+          boxShadow: isScrolled ? `0 4px 20px rgba(6, 208, 1, 0.2)` : 'none',
+          borderRadius: isScrolled ? '0 0 50px 50px / 50px' : '0',
+          clipPath: isScrolled ? 'ellipse(100% 40px at 50% 100%)' : 'none'
+        }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 300 }}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+        {/* Overlay Shape */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: isScrolled 
+              ? `linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(5,146,18,0.1) 50%, rgba(0,0,0,0.9) 100%)`
+              : 'transparent',
+            clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
+          }}
+          initial={{ height: 0 }}
+          animate={{ height: isScrolled ? '100%' : '0%' }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+        />
+        
+        <div className="relative z-10 container mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <motion.div
               whileHover={{ scale: 1.05 }}
