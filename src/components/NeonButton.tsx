@@ -2,25 +2,35 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@heroui/react';
 import { Icon } from '@iconify/react';
+import { neonColors } from '../theme/theme';
+import { Link } from 'react-router-dom';
 
 interface NeonButtonProps {
   children: React.ReactNode;
   icon?: string;
-  color: string;
+  color?: string;
   variant?: 'solid' | 'bordered' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   href?: string;
-  onClick?: () => void;
+  to?: string;
+  external?: boolean;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  onClick?: React.MouseEventHandler<HTMLElement>;
   className?: string;
 }
 
 const NeonButton: React.FC<NeonButtonProps> = ({ 
   children, 
   icon, 
-  color,
+  color = neonColors.neonGreen,
   variant = 'solid',
   size = 'lg',
   href,
+  to,
+  external = false,
+  disabled = false,
+  type = 'button',
   onClick,
   className = ''
 }) => {
@@ -59,29 +69,46 @@ const NeonButton: React.FC<NeonButtonProps> = ({
     }
   };
 
+  const isLink = Boolean(href || to);
+  const isExternalLink = external || (href ? /^https?:\/\//i.test(href) : false);
+
+  const motionVariants = {
+    rest: { scale: 1 },
+    hover: { scale: disabled ? 1 : 1.03 },
+    tap: { scale: disabled ? 1 : 0.98 },
+  } as const;
+
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      onHoverStart={() => {
-        // Add hover sound effect if needed
-      }}
+      initial="rest"
+      whileHover="hover"
+      whileTap="tap"
+      variants={motionVariants}
     >
       <Button
-        as={href ? 'a' : 'button'}
-        href={href}
+        as={to ? Link : href ? 'a' : 'button'}
+        // react-router Link prop
+        {...(to ? { to } : {})}
+        // anchor props
+        {...(href ? { href } : {})}
+        {...(href && isExternalLink ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         onClick={onClick}
         size={size}
-        className={baseClasses}
+        type={!isLink ? type : undefined}
+        isDisabled={disabled}
+        className={`relative overflow-hidden ${baseClasses}`}
         style={getButtonStyle()}
       >
         <motion.div
           className="flex items-center gap-2"
-          whileHover={{ x: 2 }}
+          variants={{
+            rest: { x: 0 },
+            hover: { x: disabled ? 0 : 2 },
+          }}
         >
           {icon && (
             <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
+              animate={disabled ? undefined : { rotate: [0, 10, -10, 0] }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
@@ -102,9 +129,9 @@ const NeonButton: React.FC<NeonButtonProps> = ({
             filter: 'blur(20px)',
             opacity: 0
           }}
-          whileHover={{
-            opacity: 0.5,
-            scale: 1.2
+          variants={{
+            rest: { opacity: 0, scale: 1 },
+            hover: { opacity: disabled ? 0 : 0.45, scale: disabled ? 1 : 1.15 },
           }}
           transition={{ duration: 0.3 }}
         />
@@ -116,10 +143,14 @@ const NeonButton: React.FC<NeonButtonProps> = ({
             border: `1px solid ${color}`,
             opacity: 0
           }}
-          animate={{
-            opacity: [0, 1, 0],
-            scale: [1, 1.1, 1]
-          }}
+          animate={
+            disabled
+              ? undefined
+              : {
+                  opacity: [0, 1, 0],
+                  scale: [1, 1.08, 1],
+                }
+          }
           transition={{
             duration: 2,
             repeat: Infinity,

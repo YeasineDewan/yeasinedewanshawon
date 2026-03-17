@@ -9,6 +9,9 @@ interface Particle {
   duration: number;
   delay: number;
   color: string;
+  driftX: number;
+  driftY: number;
+  midScale: number;
 }
 
 interface FloatingParticlesProps {
@@ -30,9 +33,25 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
       size: Math.random() * 3 + 1,
       duration: Math.random() * 20 + 10,
       delay: Math.random() * 5,
-      color: colors[Math.floor(Math.random() * colors.length)]
+      color: colors[Math.floor(Math.random() * colors.length)],
+      driftX: Math.random() * 200 - 100,
+      driftY: Math.random() * 200 - 100,
+      midScale: Math.random() * 0.5 + 0.5,
     })),
     [count, colors]
+  );
+
+  const orbs = React.useMemo(
+    () =>
+      Array.from({ length: 3 }, (_, i) => ({
+        id: i,
+        left: 20 + i * 30,
+        top: 30 + i * 20,
+        driftX: Math.random() * 100 - 50,
+        driftY: Math.random() * 100 - 50,
+        duration: 15 + i * 5,
+      })),
+    []
   );
 
   return (
@@ -50,10 +69,10 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
             boxShadow: `0 0 ${particle.size * 2}px ${particle.color}`,
           }}
           animate={{
-            x: [0, Math.random() * 200 - 100],
-            y: [0, Math.random() * 200 - 100],
+            x: [0, particle.driftX],
+            y: [0, particle.driftY],
             opacity: [0, 1, 0.8, 0],
-            scale: [1, Math.random() * 0.5 + 0.5, 1],
+            scale: [1, particle.midScale, 1],
           }}
           transition={{
             duration: particle.duration,
@@ -92,26 +111,26 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
       </svg>
       
       {/* Glowing orbs */}
-      {Array.from({ length: 3 }, (_, i) => (
+      {orbs.map((orb) => (
         <motion.div
-          key={`orb-${i}`}
+          key={`orb-${orb.id}`}
           className="absolute rounded-full"
           style={{
-            left: `${20 + i * 30}%`,
-            top: `${30 + i * 20}%`,
+            left: `${orb.left}%`,
+            top: `${orb.top}%`,
             width: '100px',
             height: '100px',
-            background: `radial-gradient(circle, ${colors[i % colors.length]}40, transparent)`,
+            background: `radial-gradient(circle, ${colors[orb.id % colors.length]}40, transparent)`,
             filter: 'blur(40px)',
           }}
           animate={{
             scale: [1, 1.5, 1],
             opacity: [0.3, 0.6, 0.3],
-            x: [0, Math.random() * 100 - 50],
-            y: [0, Math.random() * 100 - 50],
+            x: [0, orb.driftX],
+            y: [0, orb.driftY],
           }}
           transition={{
-            duration: 15 + i * 5,
+            duration: orb.duration,
             repeat: Infinity,
             repeatType: 'reverse',
             ease: 'easeInOut'

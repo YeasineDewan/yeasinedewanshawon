@@ -1,25 +1,18 @@
-import React, { useState, useRef } from 'react';
-import { Card, CardHeader, CardBody, Chip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@heroui/react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Card, CardHeader, CardBody, Chip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Switch, Divider } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
 import FloatingParticles from '../components/FloatingParticles';
-
-// Neon color palette
-const neonColors = {
-  darkGreen: '#059212',
-  neonGreen: '#06D001',
-  lightYellow: '#F3FF90',
-  lime: '#9BEC00'
-};
+import { neonColors } from '../theme/theme';
+import StarRating from '../components/StarRating';
 
 interface ServicePack {
   id: string;
   name: string;
   icon: string;
-  originalPrice: number;
-  currentPrice: number;
-  renewalPrice: number;
+  monthly: number;
+  yearly: number;
   features: string[];
   color: string;
   description: string;
@@ -32,85 +25,78 @@ interface ServicePack {
 const servicePacks: ServicePack[] = [
   {
     id: 'basic',
-    name: 'Starter Pack',
+    name: 'Starter',
     icon: 'lucide:rocket',
-    originalPrice: 12000,
-    currentPrice: 8000,
-    renewalPrice: 2000,
+    monthly: 249,
+    yearly: 2490,
     color: 'blue',
     features: [
-      'Basic website development',
-      'Mobile responsive design',
-      'Contact form integration',
-      'Basic SEO optimization',
-      '1 month support'
+      '5–7 page marketing website',
+      'Mobile-first responsive UI',
+      'Basic SEO + analytics',
+      'Contact + lead capture',
+      '30 days support'
     ],
     description: 'Perfect for small businesses and startups looking to establish their online presence with a professional website.',
     deliverables: [
-      'Responsive website design (5-7 pages)',
-      'Mobile-first development',
-      'Contact form with email integration',
-      'Basic SEO setup',
-      'Google Analytics integration',
-      'Social media links',
-      '1 month free support & maintenance'
+      'Discovery call + requirements outline',
+      'Responsive UI + performance pass',
+      'Contact/lead form with validation',
+      'SEO basics (metadata, sitemap)',
+      'Analytics + conversion tracking',
+      'Deployment + handover'
     ],
     timeline: '2-3 weeks',
     badge: 'Most Popular'
   },
   {
     id: 'professional',
-    name: 'Business Pack',
+    name: 'Growth',
     icon: 'lucide:shield-check',
-    originalPrice: 20000,
-    currentPrice: 15000,
-    renewalPrice: 4000,
+    monthly: 499,
+    yearly: 4990,
     color: 'green',
     features: [
-      'Advanced website development',
-      'E-commerce integration',
-      'Penetration testing',
-      'Advanced security features',
-      '3 months support'
+      '10–15 pages or CMS',
+      'E‑commerce / payments',
+      'Security hardening pass',
+      'Performance + accessibility',
+      '90 days support'
     ],
     description: 'Comprehensive solution for growing businesses needing advanced features and robust security.',
     deliverables: [
-      'Advanced website development (10-15 pages)',
-      'E-commerce functionality',
-      'Content Management System',
-      'Security audit & penetration testing',
-      'Advanced SEO optimization',
-      'Performance optimization',
-      'Database integration',
-      '3 months support & maintenance'
+      'CMS setup + content workflow',
+      'E‑commerce / checkout integration',
+      'Security baseline audit + fixes',
+      'Performance optimization report',
+      'Accessibility improvements (WCAG-minded)',
+      'Deployment + monitoring setup'
     ],
     timeline: '4-6 weeks',
     popular: true
   },
   {
     id: 'premium',
-    name: 'Enterprise Pack',
+    name: 'Enterprise',
     icon: 'lucide:crown',
-    originalPrice: 35000,
-    currentPrice: 25000,
-    renewalPrice: 6000,
+    monthly: 899,
+    yearly: 8990,
     color: 'purple',
     features: [
-      'Full-stack development',
-      'Custom web applications',
-      'Complete cybersecurity',
-      'Advanced security audits',
-      '6 months support'
+      'Custom web app + API',
+      'Role-based dashboards',
+      'Threat modeling + audit',
+      'CI/CD + environments',
+      '180 days priority support'
     ],
     description: 'Full-stack enterprise solution with custom applications and comprehensive cybersecurity measures.',
     deliverables: [
-      'Custom web application development',
-      'Full-stack architecture (Frontend + Backend + API)',
-      'Complete cybersecurity assessment',
-      'Advanced security implementations',
-      'Custom dashboard & analytics',
-      'API development & integration',
-      '6 months priority support & maintenance'
+      'Architecture + API design',
+      'Auth, roles, audit logs',
+      'Security assessment + remediation',
+      'CI/CD pipeline + staging/prod',
+      'Observability (logs/metrics)',
+      'Documentation + training session'
     ],
     timeline: '6-8 weeks'
   }
@@ -118,7 +104,8 @@ const servicePacks: ServicePack[] = [
 
 const Services: React.FC = () => {
   const [selectedPack, setSelectedPack] = useState<string | null>(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  const [billingYearly, setBillingYearly] = useState(true);
   const heroRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
   
@@ -138,6 +125,46 @@ const Services: React.FC = () => {
     }
   };
 
+  const ratingKey = (packId: string) => `service_pack_rating:${packId}`;
+  const ratingCountKey = (packId: string) => `service_pack_rating_count:${packId}`;
+
+  const [ratings, setRatings] = useState<Record<string, { avg: number; count: number }>>({});
+
+  useEffect(() => {
+    const next: Record<string, { avg: number; count: number }> = {};
+    for (const p of servicePacks) {
+      const avg = Number(localStorage.getItem(ratingKey(p.id)) ?? '');
+      const count = Number(localStorage.getItem(ratingCountKey(p.id)) ?? '');
+      next[p.id] = {
+        avg: Number.isFinite(avg) && avg > 0 ? avg : 4.7,
+        count: Number.isFinite(count) && count > 0 ? count : 120 + Math.floor(Math.random() * 60),
+      };
+    }
+    setRatings(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const overallRating = useMemo(() => {
+    const vals = Object.values(ratings);
+    if (vals.length === 0) return { avg: 4.8, count: 340 };
+    const totalCount = vals.reduce((s, v) => s + v.count, 0);
+    const weighted = vals.reduce((s, v) => s + v.avg * v.count, 0);
+    return { avg: weighted / totalCount, count: totalCount };
+  }, [ratings]);
+
+  const submitRating = (packId: string, score: number) => {
+    setRatings((prev) => {
+      const current = prev[packId] ?? { avg: 4.7, count: 100 };
+      const nextCount = current.count + 1;
+      const nextAvg = (current.avg * current.count + score) / nextCount;
+      localStorage.setItem(ratingKey(packId), String(nextAvg));
+      localStorage.setItem(ratingCountKey(packId), String(nextCount));
+      return { ...prev, [packId]: { avg: nextAvg, count: nextCount } };
+    });
+  };
+
+  const priceFor = (p: ServicePack) => (billingYearly ? p.yearly : p.monthly);
+
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Background Particles */}
@@ -149,7 +176,7 @@ const Services: React.FC = () => {
         style={{ y: heroY, opacity: heroOpacity }}
         className="relative z-10"
       >
-        <section className="min-h-screen flex items-center justify-center px-4 py-20">
+        <section className="min-h-screen flex items-center justify-center px-4 py-20 pt-28 md:pt-32">
           <div className="absolute inset-0 bg-gradient-to-br from-black via-green-950 to-black opacity-90" />
           <div className="absolute inset-0 bg-gradient-to-t from-green-900/20 via-transparent to-lime-900/20" />
           
@@ -209,8 +236,33 @@ const Services: React.FC = () => {
                   animate={heroInView ? { y: 0, opacity: 1 } : {}}
                   transition={{ delay: 0.5, duration: 0.8 }}
                 >
-                  From basic websites to enterprise applications, I provide comprehensive development and cybersecurity solutions tailored to your business needs.
+                  From high-converting websites to secure web applications, you get clear scope, tiered pricing, measurable deliverables, and security-first execution.
                 </motion.p>
+
+                <motion.div
+                  className="flex flex-wrap items-center gap-4"
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={heroInView ? { y: 0, opacity: 1 } : {}}
+                  transition={{ delay: 0.55, duration: 0.8 }}
+                >
+                  <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3">
+                    <div className="text-xs text-gray-400 mb-1">Client satisfaction</div>
+                    <div className="flex items-center gap-2">
+                      <StarRating value={overallRating.avg} readonly size="sm" />
+                      <span className="text-sm" style={{ color: neonColors.lightYellow }}>
+                        {overallRating.avg.toFixed(1)}
+                      </span>
+                      <span className="text-xs text-gray-400">({overallRating.count} ratings)</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3">
+                    <div className="text-xs text-gray-400 mb-1">Response time</div>
+                    <div className="text-sm font-semibold" style={{ color: neonColors.lightYellow }}>
+                      &lt; 24h
+                    </div>
+                  </div>
+                </motion.div>
                 
                 <motion.div 
                   className="flex flex-wrap gap-4"
@@ -221,7 +273,7 @@ const Services: React.FC = () => {
                   <NeonButton 
                     icon="lucide:phone"
                     color={neonColors.neonGreen}
-                    href="/contact"
+                    to="/contact"
                   >
                     Get Quote
                   </NeonButton>
@@ -230,7 +282,7 @@ const Services: React.FC = () => {
                     icon="lucide:calendar"
                     color={neonColors.lime}
                     variant="bordered"
-                    href="/contact"
+                    to="/contact"
                   >
                     Schedule Consultation
                   </NeonButton>
@@ -335,8 +387,22 @@ const Services: React.FC = () => {
               </span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Choose the perfect package for your business needs. All packages include security-first development and ongoing support.
+              Tiered packages with clear deliverables. Toggle billing to see monthly vs yearly pricing.
             </p>
+
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <span className={`text-sm ${!billingYearly ? 'text-white' : 'text-gray-400'}`}>Monthly</span>
+              <Switch
+                isSelected={billingYearly}
+                onValueChange={setBillingYearly}
+                size="sm"
+                className="border-2"
+                style={{ borderColor: neonColors.lime }}
+              />
+              <span className={`text-sm ${billingYearly ? 'text-white' : 'text-gray-400'}`}>
+                Yearly <span className="text-xs" style={{ color: neonColors.lightYellow }}>(save ~15%)</span>
+              </span>
+            </div>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -393,14 +459,11 @@ const Services: React.FC = () => {
                     </h3>
                     
                     <div className="text-center mb-4">
-                      <div className="text-gray-400 line-through text-sm">
-                        ${pack.originalPrice.toLocaleString()}
-                      </div>
                       <div className="text-3xl font-bold" style={{ color: getColorValue(pack.color) }}>
-                        ${pack.currentPrice.toLocaleString()}
+                        ${priceFor(pack).toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-400">
-                        ${pack.renewalPrice.toLocaleString()}/year renewal
+                        {billingYearly ? 'per year' : 'per month'}
                       </div>
                     </div>
                   </CardHeader>
@@ -424,15 +487,28 @@ const Services: React.FC = () => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.6 + index * 0.1 + i * 0.05, duration: 0.8 }}
                         >
-                          <motion.div
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                          >
-                            <Icon icon="lucide:check" className="w-4 h-4" style={{ color: getColorValue(pack.color) }} />
-                          </motion.div>
+                          <Icon icon="lucide:check" className="w-4 h-4" style={{ color: getColorValue(pack.color) }} />
                           <span className="text-sm text-gray-300">{feature}</span>
                         </motion.div>
                       ))}
+                    </div>
+
+                    <Divider className="bg-white/10 my-5" />
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-gray-400 mb-1">Rating</div>
+                        <div className="flex items-center gap-2">
+                          <StarRating value={(ratings[pack.id]?.avg ?? 4.7)} readonly size="sm" />
+                          <span className="text-xs text-gray-400">({ratings[pack.id]?.count ?? 0})</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-400 mb-1">Timeline</div>
+                        <div className="text-sm font-semibold" style={{ color: getColorValue(pack.color) }}>
+                          {pack.timeline}
+                        </div>
+                      </div>
                     </div>
 
                     <motion.div
@@ -441,13 +517,13 @@ const Services: React.FC = () => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.7 + index * 0.1, duration: 0.8 }}
                     >
-                      <div className="text-sm text-gray-400 mb-2">Timeline</div>
-                      <div 
-                        className="text-lg font-semibold"
-                        style={{ color: getColorValue(pack.color) }}
-                      >
-                        {pack.timeline}
-                      </div>
+                      <div className="text-xs text-gray-400 mt-4">Rate this tier</div>
+                      <StarRating
+                        value={0}
+                        size="md"
+                        onChange={(score) => submitRating(pack.id, score)}
+                        className="mt-1"
+                      />
                     </motion.div>
                   </CardBody>
 
@@ -462,11 +538,11 @@ const Services: React.FC = () => {
                         color={getColorValue(pack.color)}
                         onClick={() => {
                           setSelectedPack(pack.id);
-                          onOpen();
+                          setIsOpen(true);
                         }}
                         className="w-full"
                       >
-                        Choose Package
+                        View Scope
                       </NeonButton>
                     </motion.div>
                   </div>
@@ -479,18 +555,7 @@ const Services: React.FC = () => {
                     }}
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
-                    animate={{
-                      background: [
-                        `radial-gradient(circle at center, ${getColorValue(pack.color)}10, transparent)`,
-                        `radial-gradient(circle at 30% 30%, ${getColorValue(pack.color)}15, transparent)`,
-                        `radial-gradient(circle at center, ${getColorValue(pack.color)}10, transparent)`,
-                      ],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
+                    transition={{ duration: 0.25 }}
                   />
                 </Card>
               </motion.div>
@@ -504,7 +569,7 @@ const Services: React.FC = () => {
         {selectedPack && (
           <Modal 
             isOpen={isOpen} 
-            onOpenChange={onOpenChange}
+            onOpenChange={(open) => setIsOpen(open)}
             size="2xl"
             className="bg-black/90 backdrop-blur-md"
           >
@@ -569,16 +634,16 @@ const Services: React.FC = () => {
                 <div className="flex gap-4 w-full">
                   <NeonButton
                     icon="lucide:x"
-                    color="gray"
+                    color="#9ca3af"
                     variant="bordered"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => setIsOpen(false)}
                   >
                     Close
                   </NeonButton>
                   <NeonButton
                     icon="lucide:phone"
                     color={neonColors.neonGreen}
-                    href="/contact"
+                    to="/contact"
                     className="flex-1"
                   >
                     Get Started

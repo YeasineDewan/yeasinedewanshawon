@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Textarea, Button, Card, CardBody } from '@heroui/react';
+import React, { useState } from 'react';
+import { Input, Textarea, Card, CardBody } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
 import FloatingParticles from '../components/FloatingParticles';
-
-// Neon color palette
-const neonColors = {
-  darkGreen: '#059212',
-  neonGreen: '#06D001',
-  lightYellow: '#F3FF90',
-  lime: '#9BEC00'
-};
+import { neonColors } from '../theme/theme';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -23,16 +16,63 @@ const Contact: React.FC = () => {
   const [status, setStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+
+    if (errors[e.target.name]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[e.target.name];
+        return next;
+      });
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required';
+    } else if (formData.subject.length < 3) {
+      newErrors.subject = 'Subject must be at least 3 characters';
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.length < 10) {
+      newErrors.message = 'Message must be at least 10 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      setStatus('Please fix the errors below');
+      setTimeout(() => setStatus(''), 3000);
+      return;
+    }
+    
     setIsSubmitting(true);
     setStatus('Sending...');
     
@@ -42,6 +82,7 @@ const Contact: React.FC = () => {
     // Simulate success
     setStatus('Message sent successfully!');
     setFormData({ name: '', email: '', subject: '', message: '' });
+    setErrors({});
     setIsSubmitting(false);
     
     // Reset status after 3 seconds
@@ -80,7 +121,7 @@ const Contact: React.FC = () => {
       {/* Background Particles */}
       <FloatingParticles count={25} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      <div className="relative z-10 container mx-auto px-4 py-16 pt-28 md:pt-32">
         {/* Header Section */}
         <motion.div
           className="text-center mb-16"
@@ -89,7 +130,7 @@ const Contact: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <motion.h1 
-            className="text-5xl md:text-6xl font-bold mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
             style={{ textShadow: `0 0 30px ${neonColors.neonGreen}` }}
           >
             <span style={{ color: neonColors.lightYellow }}>Get in</span>{' '}
@@ -105,7 +146,7 @@ const Contact: React.FC = () => {
             </span>
           </motion.h1>
           <motion.p 
-            className="text-xl text-gray-300 max-w-3xl mx-auto mb-8"
+            className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
@@ -114,7 +155,7 @@ const Contact: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Form */}
           <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -122,7 +163,7 @@ const Contact: React.FC = () => {
             transition={{ delay: 0.4, duration: 0.8, ease: 'easeOut' }}
           >
             <Card className="bg-gray-900/50 backdrop-blur-sm border-2" style={{ borderColor: neonColors.neonGreen }}>
-              <CardBody className="p-8">
+              <CardBody className="p-6 md:p-8">
                 <motion.h2 
                   className="text-2xl font-bold mb-6"
                   style={{ color: neonColors.lightYellow }}
@@ -145,33 +186,39 @@ const Contact: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
                   >
-                    <motion.div
-                      className="relative"
-                      whileFocus={{ scale: 1.02 }}
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                    >
+                    <div className="relative">
+                      <motion.div
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <Icon icon="lucide:user" className="w-4 h-4" style={{ color: neonColors.lime }} />
+                      </motion.div>
                       <Input
                         label="Your Name"
                         name="name"
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={handleChange}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
                         required
-                        className="bg-gray-800/50 text-white border-gray-700 focus:border-neon-green focus:ring-2 focus:ring-neon-green"
+                        isInvalid={!!errors.name}
+                        errorMessage={errors.name}
+                        classNames={{
+                          input: "pl-10 text-white",
+                          inputWrapper: [
+                            "bg-gray-800/50 border-gray-700 hover:border-gray-600",
+                            focusedField === 'name' && `border-2 shadow-lg`,
+                            errors.name && "border-red-500"
+                          ].filter(Boolean).join(" ")
+                        }}
                         style={{
-                          borderColor: focusedField === 'name' ? neonColors.neonGreen : '#374151',
-                          boxShadow: focusedField === 'name' ? `0 0 0 3px ${neonColors.neonGreen}40` : 'none'
+                          borderColor: focusedField === 'name' ? neonColors.neonGreen : undefined,
+                          boxShadow: focusedField === 'name' ? `0 0 0 3px ${neonColors.neonGreen}40` : undefined
                         }}
                       />
-                      <motion.div
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <Icon icon="lucide:user" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                      </motion.div>
-                    </motion.div>
+                    </div>
                   </motion.div>
 
                   <motion.div
@@ -179,12 +226,14 @@ const Contact: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4, duration: 0.8 }}
                   >
-                    <motion.div
-                      className="relative"
-                      whileFocus={{ scale: 1.02 }}
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                    >
+                    <div className="relative">
+                      <motion.div
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                      >
+                        <Icon icon="lucide:mail" className="w-4 h-4" style={{ color: neonColors.lime }} />
+                      </motion.div>
                       <Input
                         label="Email Address"
                         name="email"
@@ -192,21 +241,25 @@ const Contact: React.FC = () => {
                         placeholder="john@example.com"
                         value={formData.email}
                         onChange={handleChange}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
                         required
-                        className="bg-gray-800/50 text-white border-gray-700 focus:border-neon-green focus:ring-2 focus:ring-neon-green"
+                        isInvalid={!!errors.email}
+                        errorMessage={errors.email}
+                        classNames={{
+                          input: "pl-10 text-white",
+                          inputWrapper: [
+                            "bg-gray-800/50 border-gray-700 hover:border-gray-600",
+                            focusedField === 'email' && `border-2 shadow-lg`,
+                            errors.email && "border-red-500"
+                          ].filter(Boolean).join(" ")
+                        }}
                         style={{
-                          borderColor: focusedField === 'email' ? neonColors.neonGreen : '#374151',
-                          boxShadow: focusedField === 'email' ? `0 0 0 3px ${neonColors.neonGreen}40` : 'none'
+                          borderColor: focusedField === 'email' ? neonColors.neonGreen : undefined,
+                          boxShadow: focusedField === 'email' ? `0 0 0 3px ${neonColors.neonGreen}40` : undefined
                         }}
                       />
-                      <motion.div
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <Icon icon="lucide:mail" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                      </motion.div>
-                    </motion.div>
+                    </div>
                   </motion.div>
 
                   <motion.div
@@ -214,33 +267,39 @@ const Contact: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
                   >
-                    <motion.div
-                      className="relative"
-                      whileFocus={{ scale: 1.02 }}
-                      onFocus={() => setFocusedField('subject')}
-                      onBlur={() => setFocusedField(null)}
-                    >
+                    <div className="relative">
+                      <motion.div
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                      >
+                        <Icon icon="lucide:edit" className="w-4 h-4" style={{ color: neonColors.lime }} />
+                      </motion.div>
                       <Input
                         label="Subject"
                         name="subject"
                         placeholder="What's this about?"
                         value={formData.subject}
                         onChange={handleChange}
+                        onFocus={() => setFocusedField('subject')}
+                        onBlur={() => setFocusedField(null)}
                         required
-                        className="bg-gray-800/50 text-white border-gray-700 focus:border-neon-green focus:ring-2 focus:ring-neon-green"
+                        isInvalid={!!errors.subject}
+                        errorMessage={errors.subject}
+                        classNames={{
+                          input: "pl-10 text-white",
+                          inputWrapper: [
+                            "bg-gray-800/50 border-gray-700 hover:border-gray-600",
+                            focusedField === 'subject' && `border-2 shadow-lg`,
+                            errors.subject && "border-red-500"
+                          ].filter(Boolean).join(" ")
+                        }}
                         style={{
-                          borderColor: focusedField === 'subject' ? neonColors.neonGreen : '#374151',
-                          boxShadow: focusedField === 'subject' ? `0 0 0 3px ${neonColors.neonGreen}40` : 'none'
+                          borderColor: focusedField === 'subject' ? neonColors.neonGreen : undefined,
+                          boxShadow: focusedField === 'subject' ? `0 0 0 3px ${neonColors.neonGreen}40` : undefined
                         }}
                       />
-                      <motion.div
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <Icon icon="lucide:edit" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                      </motion.div>
-                    </motion.div>
+                    </div>
                   </motion.div>
 
                   <motion.div
@@ -248,12 +307,14 @@ const Contact: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
                   >
-                    <motion.div
-                      className="relative"
-                      whileFocus={{ scale: 1.02 }}
-                      onFocus={() => setFocusedField('message')}
-                      onBlur={() => setFocusedField(null)}
-                    >
+                    <div className="relative">
+                      <motion.div
+                        className="absolute left-3 top-6 z-10"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                      >
+                        <Icon icon="lucide:message-square" className="w-4 h-4" style={{ color: neonColors.lime }} />
+                      </motion.div>
                       <Textarea
                         label="Message"
                         name="message"
@@ -261,21 +322,25 @@ const Contact: React.FC = () => {
                         rows={4}
                         value={formData.message}
                         onChange={handleChange}
+                        onFocus={() => setFocusedField('message')}
+                        onBlur={() => setFocusedField(null)}
                         required
-                        className="bg-gray-800/50 text-white border-gray-700 focus:border-neon-green focus:ring-2 focus:ring-neon-green"
+                        isInvalid={!!errors.message}
+                        errorMessage={errors.message}
+                        classNames={{
+                          input: "pl-10 text-white",
+                          inputWrapper: [
+                            "bg-gray-800/50 border-gray-700 hover:border-gray-600",
+                            focusedField === 'message' && `border-2 shadow-lg`,
+                            errors.message && "border-red-500"
+                          ].filter(Boolean).join(" ")
+                        }}
                         style={{
-                          borderColor: focusedField === 'message' ? neonColors.neonGreen : '#374151',
-                          boxShadow: focusedField === 'message' ? `0 0 0 3px ${neonColors.neonGreen}40` : 'none'
+                          borderColor: focusedField === 'message' ? neonColors.neonGreen : undefined,
+                          boxShadow: focusedField === 'message' ? `0 0 0 3px ${neonColors.neonGreen}40` : undefined
                         }}
                       />
-                      <motion.div
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      >
-                        <Icon icon="lucide:message-square" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                      </motion.div>
-                    </motion.div>
+                    </div>
                   </motion.div>
 
                   <motion.div
@@ -287,8 +352,8 @@ const Contact: React.FC = () => {
                     <NeonButton
                       icon="lucide:send"
                       color={neonColors.neonGreen}
-                      type="submit"
                       disabled={isSubmitting}
+                      type="submit"
                       className="px-8 py-3"
                     >
                       {isSubmitting ? 'Sending...' : 'Send Message'}
@@ -307,16 +372,23 @@ const Contact: React.FC = () => {
                       className={`mt-4 p-4 rounded-lg text-center ${
                         status.includes('successfully') 
                           ? 'bg-green-900/50 border border-green-500 text-green-400' 
+                          : status.includes('fix the errors')
+                          ? 'bg-yellow-900/50 border border-yellow-500 text-yellow-400'
                           : 'bg-red-900/50 border border-red-500 text-red-400'
                       }`}
                       style={{
-                        borderColor: status.includes('successfully') ? neonColors.neonGreen : '#ef4444',
-                        boxShadow: status.includes('successfully') ? `0 0 20px ${neonColors.neonGreen}40` : `0 0 20px #ef444440`
+                        borderColor: status.includes('successfully') ? neonColors.neonGreen : 
+                                     status.includes('fix the errors') ? neonColors.lightYellow : '#ef4444',
+                        boxShadow: status.includes('successfully') ? `0 0 20px ${neonColors.neonGreen}40` : 
+                                     status.includes('fix the errors') ? `0 0 20px ${neonColors.lightYellow}40` : 
+                                     `0 0 20px #ef444440`
                       }}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center gap-2">
                         <Icon 
-                          icon={status.includes('successfully') ? 'lucide:check-circle' : 'lucide:alert-circle'} 
+                          icon={status.includes('successfully') ? 'lucide:check-circle' : 
+                                status.includes('fix the errors') ? 'lucide:alert-triangle' :
+                                'lucide:alert-circle'} 
                           className="w-5 h-5" 
                         />
                         <span>{status}</span>
@@ -336,7 +408,7 @@ const Contact: React.FC = () => {
             className="space-y-8"
           >
             <Card className="bg-gray-900/50 backdrop-blur-sm border-2" style={{ borderColor: neonColors.neonGreen }}>
-              <CardBody className="p-8">
+              <CardBody className="p-6 md:p-8">
                 <motion.h2 
                   className="text-2xl font-bold mb-6"
                   style={{ color: neonColors.lightYellow }}
@@ -348,13 +420,13 @@ const Contact: React.FC = () => {
                 </motion.h2>
                 
                 <div className="space-y-6">
-                  {contactInfo.map((info, index) => (
+                  {contactInfo.map((info) => (
                     <motion.div
                       key={info.label}
                       className="flex items-center gap-4"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + index * 0.1, duration: 0.8 }}
+                      transition={{ delay: 0.2 + contactInfo.indexOf(info) * 0.1, duration: 0.8 }}
                       whileHover={{ scale: 1.05, x: 10 }}
                     >
                       <motion.div

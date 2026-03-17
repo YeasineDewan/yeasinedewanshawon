@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, CardFooter, CardHeader, Image, Button, Chip } from '@heroui/react';
+import { Card, CardBody, CardFooter, Image, Chip } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
 import FloatingParticles from '../components/FloatingParticles';
-
-// Neon color palette
-const neonColors = {
-  darkGreen: '#059212',
-  neonGreen: '#06D001',
-  lightYellow: '#F3FF90',
-  lime: '#9BEC00'
-};
+import { neonColors } from '../theme/theme';
 
 interface Project {
   id: number;
@@ -167,7 +160,7 @@ const Projects: React.FC = () => {
       {/* Background Particles */}
       <FloatingParticles count={20} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      <div className="relative z-10 container mx-auto px-4 py-16 pt-28 md:pt-32">
         {/* Header Section */}
         <motion.div
           className="text-center mb-16"
@@ -418,6 +411,7 @@ const Projects: React.FC = () => {
                           icon="lucide:external-link"
                           color={neonColors.lime}
                           href={project.demoLink}
+                        external
                           size="sm"
                           className="w-full"
                         >
@@ -435,6 +429,7 @@ const Projects: React.FC = () => {
                           color={neonColors.lightYellow}
                           variant="bordered"
                           href={project.codeLink}
+                        external
                           size="sm"
                           className="w-full"
                         >
@@ -452,18 +447,7 @@ const Projects: React.FC = () => {
                     }}
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
-                    animate={{
-                      background: [
-                        `radial-gradient(circle at center, ${neonColors.neonGreen}10, transparent)`,
-                        `radial-gradient(circle at 30% 30%, ${neonColors.lime}10, transparent)`,
-                        `radial-gradient(circle at center, ${neonColors.neonGreen}10, transparent)`,
-                      ],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
+                    transition={{ duration: 0.25 }}
                   />
                 </Card>
               </motion.div>

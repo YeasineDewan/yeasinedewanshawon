@@ -1,32 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Switch } from '@heroui/react';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useThemeContext } from './ThemeProvider';
 import NeonButton from './NeonButton';
-
-// Neon color palette
-const neonColors = {
-  darkGreen: '#059212',
-  neonGreen: '#06D001',
-  lightYellow: '#F3FF90',
-  lime: '#9BEC00'
-};
+import { neonColors } from '../theme/theme';
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useThemeContext();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const bodyOverflowRef = useRef<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    
+    // Use passive event listener for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Close mobile menu on navigation
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    // Prevent background scroll when the mobile menu is open
+    if (bodyOverflowRef.current === null) {
+      bodyOverflowRef.current = document.body.style.overflow;
+    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : (bodyOverflowRef.current ?? '');
+    return () => {
+      document.body.style.overflow = bodyOverflowRef.current ?? '';
+    };
+  }, [isMobileMenuOpen]);
 
   const navItems = [
     { path: '/', label: 'Home', icon: 'lucide:home' },
@@ -39,32 +51,18 @@ const Header: React.FC = () => {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
           isScrolled ? 'bg-black/95 backdrop-blur-md' : 'bg-transparent'
         }`}
         style={{
           borderBottom: isScrolled ? `2px solid ${neonColors.neonGreen}` : 'none',
           boxShadow: isScrolled ? `0 4px 20px rgba(6, 208, 1, 0.2)` : 'none',
-          borderRadius: isScrolled ? '0 0 50px 50px / 50px' : '0',
-          clipPath: isScrolled ? 'ellipse(100% 40px at 50% 100%)' : 'none'
+          willChange: 'transform, background-color, border-color, box-shadow'
         }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 300 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        {/* Overlay Shape */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: isScrolled 
-              ? `linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(5,146,18,0.1) 50%, rgba(0,0,0,0.9) 100%)`
-              : 'transparent',
-            clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
-          }}
-          initial={{ height: 0 }}
-          animate={{ height: isScrolled ? '100%' : '0%' }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-        />
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
@@ -104,6 +102,7 @@ const Header: React.FC = () => {
                   <motion.div
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   >
                     <Link
                       to={item.path}
@@ -129,7 +128,7 @@ const Header: React.FC = () => {
                           layoutId="activeTab"
                           initial={{ scaleX: 0 }}
                           animate={{ scaleX: 1 }}
-                          transition={{ type: 'spring', stiffness: 300 }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                         />
                       )}
                     </Link>
@@ -144,6 +143,7 @@ const Header: React.FC = () => {
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 180 }}
                 whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               >
                 <Switch
                   checked={theme === 'dark'}
@@ -157,7 +157,7 @@ const Header: React.FC = () => {
                   startContent={
                     <motion.div
                       animate={{ rotate: theme === 'dark' ? 0 : 360 }}
-                      transition={{ duration: 0.5 }}
+                      transition={{ duration: 0.5, ease: 'easeInOut' }}
                     >
                       <Icon icon="lucide:sun" className="w-3 h-3" />
                     </motion.div>
@@ -165,7 +165,7 @@ const Header: React.FC = () => {
                   endContent={
                     <motion.div
                       animate={{ rotate: theme === 'dark' ? 360 : 0 }}
-                      transition={{ duration: 0.5 }}
+                      transition={{ duration: 0.5, ease: 'easeInOut' }}
                     >
                       <Icon icon="lucide:moon" className="w-3 h-3" />
                     </motion.div>
@@ -177,7 +177,7 @@ const Header: React.FC = () => {
               <NeonButton
                 icon="lucide:message-square"
                 color={neonColors.lightYellow}
-                href="/contact"
+                to="/contact"
                 size="sm"
               >
                 Contact
@@ -190,6 +190,7 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               >
                 <Icon 
                   icon={isMobileMenuOpen ? "lucide:x" : "lucide:menu"} 
@@ -212,13 +213,14 @@ const Header: React.FC = () => {
             exit={{ opacity: 0 }}
             onClick={() => setIsMobileMenuOpen(false)}
           >
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
             <motion.div
               className="absolute top-0 right-0 h-full w-64 bg-black/95 backdrop-blur-md border-l"
               style={{ borderColor: neonColors.neonGreen }}
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 300 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
@@ -230,6 +232,7 @@ const Header: React.FC = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   >
                     <Icon icon="lucide:x" className="w-5 h-5 text-gray-400" />
                   </motion.button>
@@ -246,6 +249,7 @@ const Header: React.FC = () => {
                       <motion.div
                         whileHover={{ scale: 1.05, x: 5 }}
                         whileTap={{ scale: 0.95 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                       >
                         <Link
                           to={item.path}
