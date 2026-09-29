@@ -68,3 +68,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-color-scheme: dark) { }
 .dark .bg-background { background-color: var(--app-bg); }
 .dark .text-foreground { color: var(--app-text); }
+
+/* Keep legacy page sections aligned with the shared portfolio theme. */
+.app-shell .bg-black { background-color: var(--app-bg) !important; }
+.app-shell .text-white { color: var(--app-text) !important; }
+.app-shell .text-gray-300, .app-shell .text-gray-400, .app-shell .text-gray-500 { color: var(--app-text-muted) !important; }
+.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70, .app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface) 88%, transparent) !important; }
+.app-shell .border-white\/10, .app-shell .border-white\/20 { border-color: var(--app-border) !important; }
+.app-shell footer { background: var(--app-surface) !important; border-top: 1px solid var(--app-border) !important; box-shadow: none !important; }
+
+@media (max-width: 767px) {
+  .app-shell main { overflow-x: clip; }
+  .app-shell section { scroll-margin-top: 5rem; }
+}

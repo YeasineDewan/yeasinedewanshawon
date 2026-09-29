@@ -34,6 +34,15 @@ const Header: React.FC = () => {
     return () => { document.body.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isMobileMenuOpen]);
+
   const isActive = (path: string) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (

@@ -222,9 +222,8 @@ const Footer: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 text-gray-300 hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-white/5"
-                        whileHover={{ x: 5, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
+  whileHover={{ x: 5, scale: 1.02 }}
+  >
                         <motion.div
                           whileHover={{ rotate: 360, scale: 1.2 }}
                           transition={{ type: 'spring', stiffness: 300 }}
@@ -237,8 +236,6 @@ const Footer: React.FC = () => {
                       <Link
                         to={link.path!}
                         className="flex items-center gap-3 text-gray-300 hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-white/5"
-                        whileHover={{ x: 5, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
                       >
                         <motion.div
                           whileHover={{ rotate: 360, scale: 1.2 }}
