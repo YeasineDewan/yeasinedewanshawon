@@ -47,23 +47,24 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 ${isScrolled ? 'pt-3' : ''}`}>
-        <nav aria-label="Primary navigation" className={`mx-auto flex max-w-7xl items-center justify-between rounded-2xl border px-3 py-2.5 sm:px-4 ${isScrolled ? 'border-[var(--app-border)] bg-[color:var(--app-surface)]/90 shadow-lg shadow-black/10 backdrop-blur-xl' : 'border-transparent bg-transparent'}`}>
-          <Link to="/" className="flex min-w-0 items-center gap-3 rounded-xl px-2 py-1.5" aria-label="Go to homepage">
+      <header className={`fixed inset-x-0 top-0 z-50 px-3 sm:px-6 ${isScrolled ? 'pt-3' : 'pt-4'}`}>
+        <nav aria-label="Primary navigation" className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--app-border)] bg-[color:var(--app-surface)]/95 px-2.5 py-2 shadow-xl shadow-black/10 backdrop-blur-xl sm:px-3">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5 rounded-xl px-2 py-1.5 hover:bg-[var(--app-surface-muted)]" aria-label="Go to homepage">
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)] shadow-sm"><Icon icon="lucide:code-2" /></span>
-            <span className="hidden min-w-0 sm:block" style={{ color: 'var(--app-text)' }}><span className="block truncate text-sm font-semibold tracking-tight">Yeasine Dewan</span><span className="block text-xs" style={{ color: 'var(--app-text-muted)' }}>Product & security engineer</span></span>
+            <span className="hidden min-w-0 sm:block"><span className="block truncate text-sm font-bold tracking-tight text-[var(--app-text)]">Yeasine Dewan</span><span className="block truncate text-[11px] text-[var(--app-text-muted)]">Product &amp; security engineer</span></span>
           </Link>
 
-          <div className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
-              <Link key={item.path} to={item.path} className={`rounded-xl px-3 py-2 text-sm font-medium ${isActive(item.path) ? 'bg-[var(--app-accent-soft)] text-[var(--app-accent-strong)]' : 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]'}`} aria-current={isActive(item.path) ? 'page' : undefined}>{item.label}</Link>
-            ))}
+          <div className="hidden items-center gap-0.5 md:flex">
+            {navItems.map((item) => {
+              const active = isActive(item.path);
+              return <Link key={item.path} to={item.path} className={`rounded-xl px-3 py-2 text-[13px] font-semibold ${active ? 'bg-[var(--app-accent-soft)] text-[var(--app-accent-strong)]' : 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]'}`} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
+            })}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button type="button" onClick={toggleTheme} className="grid size-10 place-items-center rounded-xl text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} /></button>
-            <Link to="/contact" className="hidden rounded-xl bg-[var(--app-text)] px-4 py-2.5 text-sm font-semibold text-[var(--app-bg)] hover:-translate-y-0.5 md:inline-flex">Start a conversation</Link>
-            <button type="button" onClick={() => setIsMobileMenuOpen(true)} className="grid size-10 place-items-center rounded-xl border border-[var(--app-border)] text-[var(--app-text)] md:hidden" aria-label="Open navigation menu" aria-expanded={isMobileMenuOpen}><Icon icon="lucide:menu" /></button>
+            <Link to="/contact" className="hidden rounded-xl bg-[var(--app-text)] px-4 py-2.5 text-[13px] font-bold text-[var(--app-bg)] shadow-sm hover:-translate-y-0.5 hover:shadow-md md:inline-flex">Start a conversation</Link>
+            <button type="button" onClick={() => setIsMobileMenuOpen(true)} className="grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] md:hidden" aria-label="Open navigation menu" aria-expanded={isMobileMenuOpen}><Icon icon="lucide:menu" /></button>
           </div>
         </nav>
       </header>
