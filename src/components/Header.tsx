@@ -1,280 +1,83 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Switch } from '@heroui/react';
 import { Icon } from '@iconify/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useThemeContext } from './ThemeProvider';
-import NeonButton from './NeonButton';
-import { neonColors } from '../theme/theme';
+
+const navItems = [
+  { path: '/', label: 'Home', icon: 'lucide:home' },
+  { path: '/projects', label: 'Projects', icon: 'lucide:briefcase' },
+  { path: '/services', label: 'Services', icon: 'lucide:layers-3' },
+  { path: '/blog', label: 'Journal', icon: 'lucide:book-open' },
+  { path: '/pentesting-lab', label: 'Security lab', icon: 'lucide:shield-check' },
+];
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useThemeContext();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const bodyOverflowRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    
-    // Use passive event listener for better performance
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const updateScrolled = () => setIsScrolled(window.scrollY > 16);
+    updateScrolled();
+    window.addEventListener('scroll', updateScrolled, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrolled);
   }, []);
 
   useEffect(() => {
-    // Close mobile menu on navigation
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
-    // Prevent background scroll when the mobile menu is open
-    if (bodyOverflowRef.current === null) {
-      bodyOverflowRef.current = document.body.style.overflow;
-    }
-    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : (bodyOverflowRef.current ?? '');
-    return () => {
-      document.body.style.overflow = bodyOverflowRef.current ?? '';
-    };
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
-  const navItems = [
-    { path: '/', label: 'Home', icon: 'lucide:home' },
-    { path: '/projects', label: 'Projects', icon: 'lucide:briefcase' },
-    { path: '/services', label: 'Services', icon: 'lucide:settings' },
-    { path: '/blog', label: 'Blog', icon: 'lucide:book-open' },
-    { path: '/pentesting-lab', label: 'Pentesting Lab', icon: 'lucide:shield' }
-  ];
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isMobileMenuOpen]);
+
+  const isActive = (path: string) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
     <>
-      <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
-          isScrolled ? 'bg-black/95 backdrop-blur-md' : 'bg-transparent'
-        }`}
-        style={{
-          borderBottom: isScrolled ? `2px solid ${neonColors.neonGreen}` : 'none',
-          boxShadow: isScrolled ? `0 4px 20px rgba(6, 208, 1, 0.2)` : 'none',
-          willChange: 'transform, background-color, border-color, box-shadow'
-        }}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      >
-        
-        <div className="relative z-10 container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link to="/" className="flex items-center gap-2">
-                <motion.div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: neonColors.neonGreen }}
-                  whileHover={{ rotate: 360 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <Icon icon="lucide:code" className="w-5 h-5 text-black" />
-                </motion.div>
-                <motion.span 
-                  className="font-bold text-white text-lg"
-                  whileHover={{ scale: 1.05 }}
-                  style={{ textShadow: `0 0 10px ${neonColors.neonGreen}` }}
-                >
-                  MD. Yeasine Dewan Shawon
-                </motion.span>
-              </Link>
-            </motion.div>
+      <header className={`fixed inset-x-0 top-0 z-50 px-3 sm:px-6 ${isScrolled ? 'pt-3' : 'pt-4'}`}>
+        <nav aria-label="Primary navigation" className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-2.5 py-2 shadow-xl shadow-black/20 backdrop-blur-xl sm:px-3">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5 rounded-xl px-2 py-1.5 hover:bg-[var(--app-surface-muted)]" aria-label="Go to homepage">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)] shadow-sm"><Icon icon="lucide:code-2" /></span>
+            <span className="hidden min-w-0 sm:block"><span className="block truncate text-sm font-bold tracking-tight text-[var(--app-text)]">Yeasine Dewan</span><span className="block truncate text-[11px] text-[var(--app-text-muted)]">Product &amp; security engineer</span></span>
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.path}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  >
-                    <Link
-                      to={item.path}
-                      className={`relative px-3 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 ${
-                        location.pathname === item.path
-                          ? 'text-white'
-                          : 'text-gray-300 hover:text-white'
-                      }`}
-                      style={{
-                        backgroundColor: location.pathname === item.path ? `${neonColors.neonGreen}20` : 'transparent',
-                        border: location.pathname === item.path ? `1px solid ${neonColors.neonGreen}` : 'none',
-                        boxShadow: location.pathname === item.path ? `0 0 20px ${neonColors.neonGreen}40` : 'none'
-                      }}
-                    >
-                      <Icon icon={item.icon} className="w-4 h-4" />
-                      <span>{item.label}</span>
-                      
-                      {/* Animated underline */}
-                      {location.pathname === item.path && (
-                        <motion.div
-                          className="absolute bottom-0 left-0 right-0 h-0.5"
-                          style={{ backgroundColor: neonColors.lightYellow }}
-                          layoutId="activeTab"
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                        />
-                      )}
-                    </Link>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-4">
-              {/* Theme Toggle */}
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 180 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              >
-                <Switch
-                  checked={theme === 'dark'}
-                  onChange={toggleTheme}
-                  size="sm"
-                  className="border-2"
-                  style={{
-                    borderColor: neonColors.lime,
-                    backgroundColor: theme === 'dark' ? neonColors.neonGreen : 'transparent'
-                  }}
-                  startContent={
-                    <motion.div
-                      animate={{ rotate: theme === 'dark' ? 0 : 360 }}
-                      transition={{ duration: 0.5, ease: 'easeInOut' }}
-                    >
-                      <Icon icon="lucide:sun" className="w-3 h-3" />
-                    </motion.div>
-                  }
-                  endContent={
-                    <motion.div
-                      animate={{ rotate: theme === 'dark' ? 360 : 0 }}
-                      transition={{ duration: 0.5, ease: 'easeInOut' }}
-                    >
-                      <Icon icon="lucide:moon" className="w-3 h-3" />
-                    </motion.div>
-                  }
-                />
-              </motion.div>
-
-              {/* Contact Button */}
-              <NeonButton
-                icon="lucide:message-square"
-                color={neonColors.lightYellow}
-                to="/contact"
-                size="sm"
-              >
-                Contact
-              </NeonButton>
-
-              {/* Mobile Menu Toggle */}
-              <motion.button
-                className="md:hidden p-2 rounded-lg"
-                style={{ backgroundColor: `${neonColors.neonGreen}20` }}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              >
-                <Icon 
-                  icon={isMobileMenuOpen ? "lucide:x" : "lucide:menu"} 
-                  className="w-5 h-5"
-                  style={{ color: neonColors.lightYellow }}
-                />
-              </motion.button>
-            </div>
+          <div className="hidden items-center gap-0.5 md:flex">
+            {navItems.map((item) => {
+              const active = isActive(item.path);
+              return <Link key={item.path} to={item.path} className={`rounded-xl px-3 py-2 text-[13px] font-semibold ${active ? 'bg-[var(--app-accent-soft)] text-[var(--app-accent-strong)]' : 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]'}`} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
+            })}
           </div>
-        </div>
-      </motion.nav>
 
-      {/* Mobile Menu */}
+          <div className="flex items-center gap-1.5">
+            <button type="button" onClick={toggleTheme} className="grid size-10 place-items-center rounded-xl text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} /></button>
+            <Link to="/contact" className="hidden rounded-xl bg-[var(--app-text)] px-4 py-2.5 text-[13px] font-bold text-[var(--app-surface)] shadow-sm hover:-translate-y-0.5 hover:shadow-md md:inline-flex">Start a conversation</Link>
+            <button type="button" onClick={() => setIsMobileMenuOpen(true)} className="grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] md:hidden" aria-label="Open navigation menu" aria-expanded={isMobileMenuOpen}><Icon icon="lucide:menu" /></button>
+          </div>
+        </nav>
+      </header>
+
       <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className="fixed inset-0 z-40 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-            <motion.div
-              className="absolute top-0 right-0 h-full w-64 bg-black/95 backdrop-blur-md border-l"
-              style={{ borderColor: neonColors.neonGreen }}
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-xl font-bold" style={{ color: neonColors.lightYellow }}>
-                    Menu
-                  </h3>
-                  <motion.button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    whileHover={{ scale: 1.1, rotate: 90 }}
-                    whileTap={{ scale: 0.9 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  >
-                    <Icon icon="lucide:x" className="w-5 h-5 text-gray-400" />
-                  </motion.button>
-                </div>
-                
-                <div className="space-y-4">
-                  {navItems.map((item, index) => (
-                    <motion.div
-                      key={item.path}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <motion.div
-                        whileHover={{ scale: 1.05, x: 5 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                      >
-                        <Link
-                          to={item.path}
-                          className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
-                            location.pathname === item.path
-                              ? 'text-white'
-                              : 'text-gray-300 hover:text-white'
-                          }`}
-                          style={{
-                            backgroundColor: location.pathname === item.path ? `${neonColors.neonGreen}20` : 'transparent',
-                            border: location.pathname === item.path ? `1px solid ${neonColors.neonGreen}` : 'none'
-                          }}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          <Icon icon={item.icon} className="w-5 h-5" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </motion.div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
+        {isMobileMenuOpen && <motion.div className="fixed inset-0 z-[60] md:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <button type="button" className="absolute inset-0 bg-black/45 backdrop-blur-sm" aria-label="Close navigation menu" onClick={() => setIsMobileMenuOpen(false)} />
+          <motion.aside role="dialog" aria-modal="true" aria-label="Mobile navigation" className="absolute right-0 top-0 flex h-full w-[min(88vw,360px)] flex-col border-l border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-2xl" initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
+            <div className="flex items-center justify-between"><span className="text-sm font-semibold uppercase tracking-[.18em] text-[var(--app-text-muted)]">Menu</span><button type="button" onClick={() => setIsMobileMenuOpen(false)} className="grid size-10 place-items-center rounded-xl hover:bg-[var(--app-surface-muted)]" aria-label="Close navigation menu"><Icon icon="lucide:x" /></button></div>
+            <div className="mt-10 flex flex-col gap-2">{navItems.map((item) => { const active = isActive(item.path); return <Link key={item.path} to={item.path} aria-current={active ? 'page' : undefined} className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-base font-medium ${active ? 'bg-[var(--app-accent-soft)] text-[var(--app-accent-strong)]' : 'text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]'}`}><Icon icon={item.icon} />{item.label}</Link>; })}</div>
+            <Link to="/contact" className="mt-auto inline-flex justify-center rounded-2xl bg-[var(--app-text)] px-4 py-3.5 font-semibold text-[var(--app-bg)]">Start a conversation</Link>
+          </motion.aside>
+        </motion.div>}
       </AnimatePresence>
     </>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -16,12 +16,21 @@ import BlogPost from './pages/BlogPost';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './components/ThemeProvider';
 
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [pathname]);
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="flex flex-col min-h-screen">
+          <ScrollToTop />
+          <div className="app-shell flex min-h-screen flex-col">
             <Header />
             <main className="flex-grow">
               <Routes>

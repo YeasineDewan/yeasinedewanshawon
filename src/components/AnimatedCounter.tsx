@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
 
@@ -23,28 +23,21 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 }) => {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const animationFrame = useRef<number | null>(null);
 
   useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => {
-        const steps = 60;
-        const increment = target / steps;
-        let currentStep = 0;
-        
-        const counter = setInterval(() => {
-          currentStep++;
-          setCount(Math.min(Math.round(increment * currentStep), target));
-          
-          if (currentStep >= steps) {
-            clearInterval(counter);
-          }
-        }, duration / steps);
-        
-        return () => clearInterval(counter);
-      }, delay * 1000);
-      
-      return () => clearTimeout(timer);
-    }
+    if (!isVisible) return;
+    const startedAt = performance.now() + delay * 1000;
+    const animate = (now: number) => {
+      const progress = Math.max(0, Math.min((now - startedAt) / duration, 1));
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(target * eased));
+      if (progress < 1) animationFrame.current = requestAnimationFrame(animate);
+    };
+    animationFrame.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationFrame.current !== null) cancelAnimationFrame(animationFrame.current);
+    };
   }, [isVisible, target, duration, delay]);
 
   return (

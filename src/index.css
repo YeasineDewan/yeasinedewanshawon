@@ -1,40 +1,83 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-/* Custom glow effects */
-.hover\:glow-blue:hover {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+:root {
+  --app-bg: #f6f7f5;
+  --app-surface: #ffffff;
+  --app-surface-muted: #eef1ed;
+  --app-text: #17211b;
+  --app-text-muted: #66736a;
+  --app-border: #dce4dd;
+  --app-accent: #1f7a52;
+  --app-accent-strong: #145c3c;
+  --app-accent-soft: #dff2e8;
+  --app-focus: #e5b95c;
 }
 
-.hover\:glow-green:hover {
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+.dark {
+  --app-bg: #0c120f;
+  --app-surface: #121b16;
+  --app-surface-muted: #18251d;
+  --app-text: #f1f6f2;
+  --app-text-muted: #a7b7ad;
+  --app-border: #2b3b31;
+  --app-accent: #65d49a;
+  --app-accent-strong: #9ae8bb;
+  --app-accent-soft: #183b2a;
+  --app-focus: #f2cf79;
 }
 
-.hover\:glow-red:hover {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+body, button, a, input, textarea, select { transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
+a { color: inherit; text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--app-focus); outline-offset: 3px; }
+::selection { background: var(--app-accent-soft); color: var(--app-text); }
+
+.app-shell { background: var(--app-bg); color: var(--app-text); }
+.surface { background: var(--app-surface); border: 1px solid var(--app-border); }
+.muted { color: var(--app-text-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
 
-.hover\:glow-purple:hover {
-  box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
+@media (max-width: 640px) {
+  h1 { letter-spacing: -0.04em; }
 }
 
-/* Smooth transitions for all interactive elements */
-* {
-  transition: all 0.2s ease-in-out;
-}
+/* Legacy utility classes retained for existing page sections. */
+.hover\\:glow-blue:hover { box-shadow: 0 0 20px rgba(59, 130, 246, .35); }
+.hover\\:glow-green:hover { box-shadow: 0 0 20px rgba(34, 197, 94, .35); }
+.hover\\:glow-red:hover { box-shadow: 0 0 20px rgba(239, 68, 68, .35); }
+.hover\\:glow-purple:hover { box-shadow: 0 0 20px rgba(147, 51, 234, .35); }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 45px rgba(18, 45, 30, .12); }
+.btn-hover-effect:hover { transform: translateY(-2px); }
 
-/* Enhanced button hover effects */
-.btn-hover-effect:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+.bg-background { background-color: var(--app-bg); }
+.text-foreground { color: var(--app-text); }
+@media (prefers-color-scheme: dark) { }
+.dark .bg-background { background-color: var(--app-bg); }
+.dark .text-foreground { color: var(--app-text); }
 
-/* Card hover animations */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* Keep legacy page sections aligned with the shared portfolio theme. */
+.app-shell .bg-black { background-color: var(--app-bg) !important; }
+.app-shell .text-white { color: var(--app-text) !important; }
+.app-shell .text-gray-300, .app-shell .text-gray-400, .app-shell .text-gray-500 { color: var(--app-text-muted) !important; }
+.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70, .app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface) 88%, transparent) !important; }
+.app-shell .border-white\/10, .app-shell .border-white\/20 { border-color: var(--app-border) !important; }
+.app-shell footer { background: var(--app-surface) !important; border-top: 1px solid var(--app-border) !important; box-shadow: none !important; }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+@media (max-width: 767px) {
+  .app-shell main { overflow-x: clip; }
+  .app-shell section { scroll-margin-top: 5rem; }
 }

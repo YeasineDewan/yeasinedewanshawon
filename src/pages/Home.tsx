@@ -72,7 +72,7 @@ const projects = [
   {
     title: 'E-Commerce Security Platform',
     description: 'Built a secure e-commerce platform with real-time fraud detection and payment processing.',
-    image: 'https://img.heroui.chat/image/ai?w=600&h=400&u=ecommerce-security',
+    image: '/hero-security.png',
     tech: ['React', 'Node.js', 'PostgreSQL', 'Stripe'],
     category: 'web',
     featured: true
