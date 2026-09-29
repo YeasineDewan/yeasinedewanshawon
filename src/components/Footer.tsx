@@ -10,8 +10,8 @@ const groups = [
 
 const Footer: React.FC = () => (
   <footer className="relative border-t border-[var(--app-border)] bg-[var(--app-surface)]">
-    <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10">
-      <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
+    <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10">
+      <div className="grid gap-14 lg:grid-cols-[1.15fr_2fr] lg:gap-20">
         <div className="max-w-sm">
           <Link to="/" className="inline-flex items-center gap-3 rounded-xl" aria-label="Yeasine Dewan home">
             <span className="grid size-10 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)]"><Icon icon="lucide:code-2" /></span>

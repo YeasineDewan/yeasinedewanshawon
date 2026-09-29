@@ -10,6 +10,7 @@ import AnimatedCounter from '../components/AnimatedCounter';
 import TestimonialCarousel from '../components/TestimonialCarousel';
 import NeonButton from '../components/NeonButton';
 import FloatingParticles from '../components/FloatingParticles';
+import { useThemeContext } from '../components/ThemeProvider';
 
 // Neon color palette
 const neonColors = {
@@ -173,6 +174,7 @@ const testimonials = [
 ];
 
 const Home: React.FC = () => {
+  const { theme } = useThemeContext();
   const [selectedCategory, setSelectedCategory] = useState('all');
   
   const heroRef = useRef<HTMLDivElement>(null);
@@ -198,7 +200,7 @@ const Home: React.FC = () => {
     : projects.filter(project => project.category === selectedCategory);
   
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Enhanced Animated Background Particles */}
       <FloatingParticles count={25} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
       
@@ -209,8 +211,8 @@ const Home: React.FC = () => {
         className="relative z-10"
       >
         <section className="min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="absolute inset-0 bg-gradient-to-br from-black via-green-950 to-black opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-t from-green-900/20 via-transparent to-lime-900/20" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${theme === 'dark' ? 'from-black via-green-950 to-black' : 'from-white via-emerald-50 to-white'} opacity-90`} />
+          <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark' ? 'from-green-900/20 via-transparent to-lime-900/20' : 'from-emerald-100/50 via-transparent to-lime-100/40'}`} />
           
           <div className="relative z-10 container mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -245,7 +247,7 @@ const Home: React.FC = () => {
                   animate={heroInView ? { y: 0, opacity: 1 } : {}}
                   transition={{ delay: 0.4, duration: 0.8 }}
                 >
-                  <span className="block" style={{ color: neonColors.lightYellow }}>
+                  <span className="block" style={{ color: theme === 'dark' ? neonColors.lightYellow : 'var(--app-accent-strong)' }}>
                     Building Secure
                   </span>
                   <span 

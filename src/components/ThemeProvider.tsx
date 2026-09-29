@@ -11,15 +11,16 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check for saved theme preference or default to 'light'
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme || 'light';
+    if (typeof window === 'undefined') return 'light';
+    const savedTheme = window.localStorage.getItem('theme');
+    return savedTheme === 'dark' ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    // Update document class and save to localStorage
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
+    const root = document.documentElement;
+    root.classList.toggle('dark', theme === 'dark');
+    root.style.colorScheme = theme;
+    window.localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
