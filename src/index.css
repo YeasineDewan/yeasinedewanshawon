@@ -125,6 +125,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .app-shell .project-card .card-footer { padding-inline: 1.25rem; }
 }
 
+.app-shell .lab-card { border-color: var(--app-border) !important; background: color-mix(in srgb, var(--app-surface) 94%, transparent) !important; box-shadow: 0 16px 42px color-mix(in srgb, var(--app-text) 7%, transparent); }
+.app-shell .lab-card:hover { border-color: color-mix(in srgb, var(--app-accent) 68%, var(--app-border)) !important; box-shadow: 0 20px 56px color-mix(in srgb, var(--app-accent) 15%, transparent); }
+.app-shell .lab-tabs { background: color-mix(in srgb, var(--app-surface) 90%, transparent); border-color: var(--app-border); }
+.app-shell .lab-metric { background: color-mix(in srgb, var(--app-surface-muted) 72%, transparent); border-color: var(--app-border); color: var(--app-text); }
+.app-shell .lab-metric svg { color: var(--app-accent); }
+.dashboard-stat { min-height: 176px; }
+
 @media (max-width: 767px) {
   .app-shell main { overflow-x: clip; }
   .app-shell section { scroll-margin-top: 5rem; }
