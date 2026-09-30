@@ -2,9 +2,9 @@
 @config "../tailwind.config.js";
 
 :root {
-  --app-bg: #f6f7f5;
-  --app-surface: #ffffff;
-  --app-surface-muted: #eef1ed;
+  --app-bg: #eef4ef;
+  --app-surface: #fbfefc;
+  --app-surface-muted: #e4eee7;
   --app-text: #17211b;
   --app-text-muted: #66736a;
   --app-border: #dce4dd;
@@ -76,6 +76,61 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70, .app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface) 88%, transparent) !important; }
 .app-shell .border-white\/10, .app-shell .border-white\/20 { border-color: var(--app-border) !important; }
 .app-shell footer { background: var(--app-surface) !important; border-top: 1px solid var(--app-border) !important; box-shadow: none !important; }
+.footer-shell { background: linear-gradient(180deg, color-mix(in srgb, var(--app-surface) 96%, var(--app-accent) 4%), var(--app-surface)); }
+.footer-cta { background: var(--app-accent); color: var(--app-bg); box-shadow: 0 0 26px color-mix(in srgb, var(--app-accent) 32%, transparent); }
+.footer-cta:hover { background: var(--app-accent-strong); color: var(--app-bg); transform: translateY(-2px); box-shadow: 0 12px 30px color-mix(in srgb, var(--app-accent) 28%, transparent); }
+.theme-toggle { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app-surface) 45%, transparent); }
+.header-nav { isolation: isolate; box-shadow: 0 18px 55px color-mix(in srgb, var(--app-text) 10%, transparent), 0 0 0 1px color-mix(in srgb, var(--app-accent) 7%, transparent); }
+.dark .header-nav { box-shadow: 0 18px 55px rgba(0,0,0,.48), 0 0 28px color-mix(in srgb, var(--app-accent) 16%, transparent); }
+.header-nav::before { content: ''; position: absolute; inset: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, color-mix(in srgb, var(--app-accent) 14%, transparent), transparent 32%, transparent 68%, color-mix(in srgb, var(--app-accent) 10%, transparent)); opacity: .7; z-index: -1; }
+.header-neon-line { position: absolute; left: 9%; right: 9%; bottom: -1px; height: 1px; border-radius: 999px; background: linear-gradient(90deg, transparent, var(--app-accent), var(--app-accent-strong), transparent); box-shadow: 0 0 12px var(--app-accent), 0 0 28px color-mix(in srgb, var(--app-accent) 70%, transparent); opacity: .9; }
+.header-nav-scrolled .header-neon-line { opacity: 1; box-shadow: 0 0 16px var(--app-accent), 0 0 36px color-mix(in srgb, var(--app-accent) 75%, transparent); }
+.testimonials-section { border-block: 1px solid color-mix(in srgb, var(--app-accent) 12%, var(--app-border)); }
+.testimonial-card { border-color: color-mix(in srgb, var(--app-accent) 32%, var(--app-border)) !important; box-shadow: 0 20px 60px color-mix(in srgb, var(--app-text) 9%, transparent), 0 0 34px color-mix(in srgb, var(--app-accent) 13%, transparent) !important; }
+.testimonial-avatar { color: var(--app-bg); background: linear-gradient(135deg, var(--app-accent), var(--app-accent-strong)); box-shadow: 0 0 0 6px color-mix(in srgb, var(--app-accent) 12%, transparent), 0 0 28px color-mix(in srgb, var(--app-accent) 30%, transparent); }
+.testimonial-card blockquote { text-wrap: pretty; }
+@media (max-width: 640px) { .testimonial-card .p-8 { padding: 1.25rem; } }
+.app-shell .text-gray-200, .app-shell .text-gray-100 { color: var(--app-text) !important; }
+.app-shell .text-gray-700, .app-shell .text-gray-800 { color: var(--app-text) !important; }
+.app-shell .bg-white { background-color: var(--app-surface) !important; }
+
+/* Shared portfolio surfaces stay legible in both themes while preserving the neon accent language. */
+.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70 {
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+.app-shell .text-gray-300 { color: var(--app-text-muted) !important; }
+.app-shell .text-gray-400 { color: color-mix(in srgb, var(--app-text-muted) 88%, var(--app-text)) !important; }
+.app-shell input::placeholder, .app-shell textarea::placeholder { color: var(--app-text-muted) !important; opacity: .85; }
+.app-shell .project-card, .app-shell .service-card, .app-shell .lab-card {
+  background: color-mix(in srgb, var(--app-surface) 94%, transparent);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+.app-shell .project-card:hover, .app-shell .service-card:hover, .app-shell .lab-card:hover {
+  border-color: var(--app-accent);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--app-accent) 16%, transparent);
+}
+.app-shell .project-card img, .app-shell .service-card img, .app-shell .lab-card img {
+  display: block;
+  object-fit: cover;
+}
+.app-shell .project-card .chip, .app-shell .service-card .chip { color: var(--app-bg); }
+.app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface-muted) 86%, transparent) !important; }
+.app-shell .border-white\/10 { border-color: var(--app-border) !important; }
+.app-shell .text-white { color: var(--app-text) !important; }
+
+@media (max-width: 767px) {
+  .app-shell .project-card, .app-shell .service-card, .app-shell .lab-card { border-radius: 1.25rem; }
+  .app-shell .project-card .card-footer { padding-inline: 1.25rem; }
+}
+
+.app-shell .lab-card { border-color: var(--app-border) !important; background: color-mix(in srgb, var(--app-surface) 94%, transparent) !important; box-shadow: 0 16px 42px color-mix(in srgb, var(--app-text) 7%, transparent); }
+.app-shell .lab-card:hover { border-color: color-mix(in srgb, var(--app-accent) 68%, var(--app-border)) !important; box-shadow: 0 20px 56px color-mix(in srgb, var(--app-accent) 15%, transparent); }
+.app-shell .lab-tabs { background: color-mix(in srgb, var(--app-surface) 90%, transparent); border-color: var(--app-border); }
+.app-shell .lab-metric { background: color-mix(in srgb, var(--app-surface-muted) 72%, transparent); border-color: var(--app-border); color: var(--app-text); }
+.app-shell .lab-metric svg { color: var(--app-accent); }
+.dashboard-stat { min-height: 176px; }
 
 @media (max-width: 767px) {
   .app-shell main { overflow-x: clip; }

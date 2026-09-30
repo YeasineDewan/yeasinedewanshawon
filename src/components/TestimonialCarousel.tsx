@@ -66,7 +66,7 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
           }}
         >
           <Card 
-            className="bg-gray-900/50 backdrop-blur-sm border-2 relative overflow-hidden group"
+            className="testimonial-card relative overflow-hidden rounded-3xl border bg-[var(--app-surface)]/95 shadow-xl backdrop-blur-sm group"
             style={{ 
               borderColor: color,
               boxShadow: `0 0 30px ${color}30`
@@ -95,8 +95,8 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             <CardBody className="p-8 relative z-10">
               <div className="flex items-start gap-6">
                 <motion.div 
-                  className="text-6xl relative"
-                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  className="testimonial-avatar relative grid size-16 shrink-0 place-items-center rounded-2xl text-lg font-bold tracking-tight"
+                  whileHover={{ scale: 1.05, rotate: 2 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   {testimonials[currentIndex].avatar}
@@ -145,7 +145,7 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                   </motion.div>
                   
                   <motion.blockquote 
-                    className="text-lg text-gray-300 mb-6 italic leading-relaxed"
+                    className="text-lg leading-relaxed text-[var(--app-text)]/85 md:text-xl"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
@@ -159,7 +159,7 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 }}
                   >
-                    <div className="font-semibold text-white text-lg">
+                    <div className="text-lg font-bold text-[var(--app-text)]">
                       {testimonials[currentIndex].name}
                     </div>
                     <div 
@@ -193,7 +193,7 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
       </AnimatePresence>
       
       {/* Navigation Buttons */}
-      <div className="flex justify-between items-center mt-6">
+      <div className="mt-6 flex items-center justify-between border-t border-[var(--app-border)] pt-5">
         <motion.div
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

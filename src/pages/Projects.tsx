@@ -156,7 +156,7 @@ const Projects: React.FC = () => {
   }, [selectedCategory, searchTerm, sortBy]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="app-shell min-h-screen relative overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Background Particles */}
       <FloatingParticles count={20} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
 
@@ -301,31 +301,28 @@ const Projects: React.FC = () => {
                 layout
               >
                 <Card 
-                  className="bg-gray-900/50 backdrop-blur-sm border-2 hover:shadow-2xl transition-all duration-300 overflow-hidden group relative"
+                  className="project-card flex h-full flex-col overflow-hidden rounded-3xl border bg-[var(--app-surface)]/95 shadow-lg shadow-black/5 backdrop-blur-sm transition-all duration-300 group relative hover:-translate-y-1 hover:shadow-2xl"
                   style={{ borderColor: neonColors.neonGreen }}
                 >
-                  {/* Featured Badge */}
-                  {project.featured && (
-                    <motion.div
-                      className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-black font-bold text-xs"
-                      style={{ backgroundColor: neonColors.lightYellow }}
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
-                      whileHover={{ scale: 1.2, rotate: 360 }}
-                    >
-                      <Icon icon="lucide:star" className="inline mr-1 w-3 h-3" />
-                      Featured
-                    </motion.div>
-                  )}
-
-                  {/* Project Image */}
-                  <div className="relative overflow-hidden">
+                  {/* Project image and status */}
+                  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--app-surface-muted)]">
                     <Image
                       src={project.image}
-                      alt={project.title}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      alt={`${project.title} preview`}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    {project.featured && (
+                      <motion.div
+                        className="absolute right-4 top-4 z-10 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-black shadow-lg"
+                        style={{ backgroundColor: neonColors.lightYellow }}
+                        initial={{ scale: 0, rotate: -8 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
+                      >
+                        <Icon icon="lucide:star" className="h-3 w-3" />
+                        Featured
+                      </motion.div>
+                    )}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       initial={{ opacity: 0 }}
@@ -333,7 +330,7 @@ const Projects: React.FC = () => {
                     />
                   </div>
 
-                  <CardBody className="p-6">
+                  <CardBody className="flex-1 p-6">
                     <motion.h3 
                       className="text-xl font-bold mb-3"
                       style={{ color: neonColors.lightYellow }}
@@ -343,7 +340,7 @@ const Projects: React.FC = () => {
                     </motion.h3>
                     
                     <motion.p 
-                      className="text-gray-300 text-sm mb-4 leading-relaxed"
+                      className="text-[var(--app-text-muted)] text-sm mb-4 leading-relaxed"
                       initial={{ opacity: 0.8 }}
                       whileHover={{ opacity: 1 }}
                     >
@@ -359,7 +356,7 @@ const Projects: React.FC = () => {
                         transition={{ delay: 0.2 + index * 0.05 }}
                       >
                         <Icon icon="lucide:building" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                        <span className="text-xs text-gray-400">{project.client}</span>
+                        <span className="text-xs text-[var(--app-text-muted)]">{project.client}</span>
                       </motion.div>
                     )}
 
@@ -371,7 +368,7 @@ const Projects: React.FC = () => {
                         transition={{ delay: 0.3 + index * 0.05 }}
                       >
                         <Icon icon="lucide:clock" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                        <span className="text-xs text-gray-400">{project.duration}</span>
+                        <span className="text-xs text-[var(--app-text-muted)]">{project.duration}</span>
                       </motion.div>
                     )}
 

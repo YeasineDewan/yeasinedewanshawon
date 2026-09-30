@@ -10,6 +10,7 @@ import AnimatedCounter from '../components/AnimatedCounter';
 import TestimonialCarousel from '../components/TestimonialCarousel';
 import NeonButton from '../components/NeonButton';
 import FloatingParticles from '../components/FloatingParticles';
+import { useThemeContext } from '../components/ThemeProvider';
 
 // Neon color palette
 const neonColors = {
@@ -153,26 +154,27 @@ const testimonials = [
     name: 'Sarah Johnson',
     role: 'CTO at TechStart',
     content: 'Exceptional developer with deep security knowledge. Delivered our e-commerce platform ahead of schedule with robust security measures.',
-    avatar: '👩‍💼',
+    avatar: 'SJ',
     rating: 5
   },
   {
     name: 'Michael Chen',
     role: 'Security Lead at CloudCorp',
     content: 'Outstanding penetration testing skills. Identified critical vulnerabilities we had missed and provided detailed remediation guidance.',
-    avatar: '👨‍💻',
+    avatar: 'MC',
     rating: 5
   },
   {
     name: 'Emily Rodriguez',
     role: 'Product Manager at InnovateCo',
     content: 'Full-stack expertise combined with security awareness is rare. Built our analytics platform with excellent performance and security.',
-    avatar: '👩‍🎨',
+    avatar: 'ER',
     rating: 5
   }
 ];
 
 const Home: React.FC = () => {
+  const { theme } = useThemeContext();
   const [selectedCategory, setSelectedCategory] = useState('all');
   
   const heroRef = useRef<HTMLDivElement>(null);
@@ -198,7 +200,7 @@ const Home: React.FC = () => {
     : projects.filter(project => project.category === selectedCategory);
   
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="app-shell min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Enhanced Animated Background Particles */}
       <FloatingParticles count={25} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
       
@@ -209,8 +211,8 @@ const Home: React.FC = () => {
         className="relative z-10"
       >
         <section className="min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="absolute inset-0 bg-gradient-to-br from-black via-green-950 to-black opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-t from-green-900/20 via-transparent to-lime-900/20" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${theme === 'dark' ? 'from-black via-green-950 to-black' : 'from-white via-emerald-50 to-white'} opacity-90`} />
+          <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark' ? 'from-green-900/20 via-transparent to-lime-900/20' : 'from-emerald-100/50 via-transparent to-lime-100/40'}`} />
           
           <div className="relative z-10 container mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -245,7 +247,7 @@ const Home: React.FC = () => {
                   animate={heroInView ? { y: 0, opacity: 1 } : {}}
                   transition={{ delay: 0.4, duration: 0.8 }}
                 >
-                  <span className="block" style={{ color: neonColors.lightYellow }}>
+                  <span className="block" style={{ color: theme === 'dark' ? neonColors.lightYellow : 'var(--app-accent-strong)' }}>
                     Building Secure
                   </span>
                   <span 
@@ -577,21 +579,22 @@ const Home: React.FC = () => {
                   transition={{ delay: index * 0.1, duration: 0.8 }}
                   whileHover={{ y: -10 }}
                 >
-                  <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-green-500 transition-all duration-300 overflow-hidden group">
-                    <div className="relative">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-48 object-cover"
-                      />
-                      {project.featured && (
-                        <div 
-                          className="absolute top-4 right-4 px-3 py-1 rounded-full text-black font-bold text-xs"
-                          style={{ backgroundColor: neonColors.lightYellow }}
-                        >
-                          Featured
-                        </div>
-                      )}
+  <Card className="group overflow-hidden border border-[var(--app-border)] bg-[var(--app-surface)]/90 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-[var(--app-accent)] hover:shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_18%,transparent)]">
+  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--app-surface-muted)]">
+  <Image
+  src={project.image}
+  alt={`${project.title} preview`}
+  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+  />
+  {project.featured && (
+  <div
+  className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-black shadow-lg"
+  style={{ backgroundColor: neonColors.lightYellow }}
+  >
+  <Icon icon="lucide:star" className="h-3 w-3" />
+  Featured
+  </div>
+  )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <CardBody className="p-6">
@@ -686,13 +689,13 @@ const Home: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Testimonials Section */}
-      <motion.div 
-        ref={testimonialsRef}
-        className="relative z-10 py-20"
-        style={{
-          background: `linear-gradient(135deg, ${neonColors.darkGreen}20, ${neonColors.neonGreen}10, ${neonColors.lime}20)`
-        }}
+  {/* Testimonials Section */}
+  <motion.div
+  ref={testimonialsRef}
+  className="testimonials-section relative z-10 py-24"
+  style={{
+  background: 'linear-gradient(135deg, color-mix(in srgb, var(--app-accent) 9%, transparent), transparent 48%, color-mix(in srgb, var(--app-accent-soft) 50%, transparent))'
+  }}
         initial={{ opacity: 0 }}
         animate={testimonialsInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8 }}
