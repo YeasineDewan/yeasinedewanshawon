@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <button type="button" onClick={toggleTheme} className="grid size-10 place-items-center rounded-xl text-[var(--app-text-muted)] hover:bg-[var(--app-surface-muted)] hover:text-[var(--app-text)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} /></button>
+            <button type="button" onClick={toggleTheme} className="theme-toggle grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] hover:bg-[var(--app-accent-soft)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} width="18" /></button>
             <Link to="/contact" className="hidden items-center justify-center rounded-xl bg-[var(--app-accent)] px-4 py-2.5 text-[13px] font-bold text-[var(--app-bg)] shadow-sm hover:-translate-y-0.5 hover:bg-[var(--app-accent-strong)] hover:shadow-md md:inline-flex">Start a conversation</Link>
             <button type="button" onClick={() => setIsMobileMenuOpen(true)} className="grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] md:hidden" aria-label="Open navigation menu" aria-expanded={isMobileMenuOpen}><Icon icon="lucide:menu" /></button>
           </div>
