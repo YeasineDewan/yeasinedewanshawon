@@ -101,6 +101,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-color: var(--app-accent);
   box-shadow: 0 20px 50px color-mix(in srgb, var(--app-accent) 16%, transparent);
 }
+.app-shell .project-card img, .app-shell .service-card img, .app-shell .lab-card img {
+  display: block;
+  object-fit: cover;
+}
+.app-shell .project-card .chip, .app-shell .service-card .chip { color: var(--app-bg); }
+.app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface-muted) 86%, transparent) !important; }
+.app-shell .border-white\/10 { border-color: var(--app-border) !important; }
+.app-shell .text-white { color: var(--app-text) !important; }
+
+@media (max-width: 767px) {
+  .app-shell .project-card, .app-shell .service-card, .app-shell .lab-card { border-radius: 1.25rem; }
+  .app-shell .project-card .card-footer { padding-inline: 1.25rem; }
+}
 
 @media (max-width: 767px) {
   .app-shell main { overflow-x: clip; }

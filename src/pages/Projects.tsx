@@ -156,7 +156,7 @@ const Projects: React.FC = () => {
   }, [selectedCategory, searchTerm, sortBy]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="app-shell min-h-screen relative overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Background Particles */}
       <FloatingParticles count={20} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
 
@@ -301,7 +301,7 @@ const Projects: React.FC = () => {
                 layout
               >
                 <Card 
-                  className="bg-gray-900/50 backdrop-blur-sm border-2 hover:shadow-2xl transition-all duration-300 overflow-hidden group relative"
+                  className="project-card flex h-full flex-col overflow-hidden rounded-3xl border bg-[var(--app-surface)]/95 shadow-lg shadow-black/5 backdrop-blur-sm transition-all duration-300 group relative hover:-translate-y-1 hover:shadow-2xl"
                   style={{ borderColor: neonColors.neonGreen }}
                 >
                   {/* Project image and status */}
@@ -330,7 +330,7 @@ const Projects: React.FC = () => {
                     />
                   </div>
 
-                  <CardBody className="p-6">
+                  <CardBody className="flex-1 p-6">
                     <motion.h3 
                       className="text-xl font-bold mb-3"
                       style={{ color: neonColors.lightYellow }}
@@ -340,7 +340,7 @@ const Projects: React.FC = () => {
                     </motion.h3>
                     
                     <motion.p 
-                      className="text-gray-300 text-sm mb-4 leading-relaxed"
+                      className="text-[var(--app-text-muted)] text-sm mb-4 leading-relaxed"
                       initial={{ opacity: 0.8 }}
                       whileHover={{ opacity: 1 }}
                     >
@@ -356,7 +356,7 @@ const Projects: React.FC = () => {
                         transition={{ delay: 0.2 + index * 0.05 }}
                       >
                         <Icon icon="lucide:building" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                        <span className="text-xs text-gray-400">{project.client}</span>
+                        <span className="text-xs text-[var(--app-text-muted)]">{project.client}</span>
                       </motion.div>
                     )}
 
@@ -368,7 +368,7 @@ const Projects: React.FC = () => {
                         transition={{ delay: 0.3 + index * 0.05 }}
                       >
                         <Icon icon="lucide:clock" className="w-4 h-4" style={{ color: neonColors.lime }} />
-                        <span className="text-xs text-gray-400">{project.duration}</span>
+                        <span className="text-xs text-[var(--app-text-muted)]">{project.duration}</span>
                       </motion.div>
                     )}
 
