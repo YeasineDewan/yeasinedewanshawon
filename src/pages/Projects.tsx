@@ -304,28 +304,25 @@ const Projects: React.FC = () => {
                   className="bg-gray-900/50 backdrop-blur-sm border-2 hover:shadow-2xl transition-all duration-300 overflow-hidden group relative"
                   style={{ borderColor: neonColors.neonGreen }}
                 >
-                  {/* Featured Badge */}
-                  {project.featured && (
-                    <motion.div
-                      className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-black font-bold text-xs"
-                      style={{ backgroundColor: neonColors.lightYellow }}
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
-                      whileHover={{ scale: 1.2, rotate: 360 }}
-                    >
-                      <Icon icon="lucide:star" className="inline mr-1 w-3 h-3" />
-                      Featured
-                    </motion.div>
-                  )}
-
-                  {/* Project Image */}
-                  <div className="relative overflow-hidden">
+                  {/* Project image and status */}
+                  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--app-surface-muted)]">
                     <Image
                       src={project.image}
-                      alt={project.title}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      alt={`${project.title} preview`}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    {project.featured && (
+                      <motion.div
+                        className="absolute right-4 top-4 z-10 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-black shadow-lg"
+                        style={{ backgroundColor: neonColors.lightYellow }}
+                        initial={{ scale: 0, rotate: -8 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
+                      >
+                        <Icon icon="lucide:star" className="h-3 w-3" />
+                        Featured
+                      </motion.div>
+                    )}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       initial={{ opacity: 0 }}

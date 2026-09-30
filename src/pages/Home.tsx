@@ -579,21 +579,22 @@ const Home: React.FC = () => {
                   transition={{ delay: index * 0.1, duration: 0.8 }}
                   whileHover={{ y: -10 }}
                 >
-                  <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-green-500 transition-all duration-300 overflow-hidden group">
-                    <div className="relative">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-48 object-cover"
-                      />
-                      {project.featured && (
-                        <div 
-                          className="absolute top-4 right-4 px-3 py-1 rounded-full text-black font-bold text-xs"
-                          style={{ backgroundColor: neonColors.lightYellow }}
-                        >
-                          Featured
-                        </div>
-                      )}
+  <Card className="group overflow-hidden border border-[var(--app-border)] bg-[var(--app-surface)]/90 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-[var(--app-accent)] hover:shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_18%,transparent)]">
+  <div className="relative aspect-[16/9] overflow-hidden bg-[var(--app-surface-muted)]">
+  <Image
+  src={project.image}
+  alt={`${project.title} preview`}
+  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+  />
+  {project.featured && (
+  <div
+  className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-black shadow-lg"
+  style={{ backgroundColor: neonColors.lightYellow }}
+  >
+  <Icon icon="lucide:star" className="h-3 w-3" />
+  Featured
+  </div>
+  )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <CardBody className="p-6">

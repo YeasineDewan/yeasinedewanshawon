@@ -84,6 +84,24 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .app-shell .text-gray-700, .app-shell .text-gray-800 { color: var(--app-text) !important; }
 .app-shell .bg-white { background-color: var(--app-surface) !important; }
 
+/* Shared portfolio surfaces stay legible in both themes while preserving the neon accent language. */
+.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70 {
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+.app-shell .text-gray-300 { color: var(--app-text-muted) !important; }
+.app-shell .text-gray-400 { color: color-mix(in srgb, var(--app-text-muted) 88%, var(--app-text)) !important; }
+.app-shell input::placeholder, .app-shell textarea::placeholder { color: var(--app-text-muted) !important; opacity: .85; }
+.app-shell .project-card, .app-shell .service-card, .app-shell .lab-card {
+  background: color-mix(in srgb, var(--app-surface) 94%, transparent);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+.app-shell .project-card:hover, .app-shell .service-card:hover, .app-shell .lab-card:hover {
+  border-color: var(--app-accent);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--app-accent) 16%, transparent);
+}
+
 @media (max-width: 767px) {
   .app-shell main { overflow-x: clip; }
   .app-shell section { scroll-margin-top: 5rem; }
