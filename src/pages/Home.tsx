@@ -154,21 +154,21 @@ const testimonials = [
     name: 'Sarah Johnson',
     role: 'CTO at TechStart',
     content: 'Exceptional developer with deep security knowledge. Delivered our e-commerce platform ahead of schedule with robust security measures.',
-    avatar: '👩‍💼',
+    avatar: 'SJ',
     rating: 5
   },
   {
     name: 'Michael Chen',
     role: 'Security Lead at CloudCorp',
     content: 'Outstanding penetration testing skills. Identified critical vulnerabilities we had missed and provided detailed remediation guidance.',
-    avatar: '👨‍💻',
+    avatar: 'MC',
     rating: 5
   },
   {
     name: 'Emily Rodriguez',
     role: 'Product Manager at InnovateCo',
     content: 'Full-stack expertise combined with security awareness is rare. Built our analytics platform with excellent performance and security.',
-    avatar: '👩‍🎨',
+    avatar: 'ER',
     rating: 5
   }
 ];
@@ -200,7 +200,7 @@ const Home: React.FC = () => {
     : projects.filter(project => project.category === selectedCategory);
   
   return (
-    <div className="min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+    <div className="app-shell min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Enhanced Animated Background Particles */}
       <FloatingParticles count={25} colors={[neonColors.neonGreen, neonColors.lime, neonColors.lightYellow]} />
       
@@ -689,13 +689,13 @@ const Home: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Testimonials Section */}
-      <motion.div 
-        ref={testimonialsRef}
-        className="relative z-10 py-20"
-        style={{
-          background: `linear-gradient(135deg, ${neonColors.darkGreen}20, ${neonColors.neonGreen}10, ${neonColors.lime}20)`
-        }}
+  {/* Testimonials Section */}
+  <motion.div
+  ref={testimonialsRef}
+  className="testimonials-section relative z-10 py-24"
+  style={{
+  background: 'linear-gradient(135deg, color-mix(in srgb, var(--app-accent) 9%, transparent), transparent 48%, color-mix(in srgb, var(--app-accent-soft) 50%, transparent))'
+  }}
         initial={{ opacity: 0 }}
         animate={testimonialsInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8 }}

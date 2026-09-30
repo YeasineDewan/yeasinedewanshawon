@@ -48,7 +48,7 @@ const Header: React.FC = () => {
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-50 px-3 sm:px-6 ${isScrolled ? 'pt-3' : 'pt-4'}`}>
-        <nav aria-label="Primary navigation" className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-2.5 py-2 shadow-xl shadow-black/20 backdrop-blur-xl sm:px-3">
+        <nav aria-label="Primary navigation" className={`header-nav relative mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-surface)_88%,transparent)] px-2.5 py-2 shadow-xl shadow-black/20 backdrop-blur-xl sm:px-3 ${isScrolled ? 'header-nav-scrolled' : ''}`}><span aria-hidden="true" className="header-neon-line" />
           <Link to="/" className="flex min-w-0 items-center gap-2.5 rounded-xl px-2 py-1.5 hover:bg-[var(--app-surface-muted)]" aria-label="Go to homepage">
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)] shadow-sm"><Icon icon="lucide:code-2" /></span>
             <span className="hidden min-w-0 sm:block"><span className="block truncate text-sm font-bold tracking-tight text-[var(--app-text)]">Yeasine Dewan</span><span className="block truncate text-[11px] text-[var(--app-text-muted)]">Product &amp; security engineer</span></span>
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <button type="button" onClick={toggleTheme} className="theme-toggle grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] hover:bg-[var(--app-accent-soft)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} width="18" /></button>
+            <button type="button" onClick={toggleTheme} className="theme-toggle grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] hover:bg-[var(--app-accent-soft)]" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'} width="18" /></button>
             <Link to="/contact" className="hidden items-center justify-center rounded-xl bg-[var(--app-accent)] px-4 py-2.5 text-[13px] font-bold text-[var(--app-bg)] shadow-sm hover:-translate-y-0.5 hover:bg-[var(--app-accent-strong)] hover:shadow-md md:inline-flex">Start a conversation</Link>
             <button type="button" onClick={() => setIsMobileMenuOpen(true)} className="grid size-10 place-items-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-muted)] text-[var(--app-text)] hover:border-[var(--app-accent)] md:hidden" aria-label="Open navigation menu" aria-expanded={isMobileMenuOpen}><Icon icon="lucide:menu" /></button>
           </div>
