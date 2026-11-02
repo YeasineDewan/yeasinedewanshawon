@@ -18,7 +18,7 @@ const Footer: React.FC = () => (
             <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)] shadow-lg shadow-[var(--app-accent)]/20 transition-transform group-hover:-translate-y-0.5"><Icon icon="lucide:code-2" width="22" /></span>
             <span><span className="block max-w-[220px] text-xl font-bold leading-tight tracking-tight text-[var(--app-text)]">MD. Yeasine Dewan Shawon</span></span>
           </Link>
-          <p className="mt-7 max-w-sm text-sm leading-7 text-[var(--app-text-muted)]">Full Stack Developer | Cybersecurity Specialist | Data Entry Expert</p>
+          <p className="mt-7 max-w-sm text-sm leading-7 text-[var(--app-text-muted)]">Secure products, sharp interfaces, and resilient digital systems.</p>
           <Link to="/contact" className="footer-cta mt-7 inline-flex w-full max-w-[360px] items-center justify-center gap-3 rounded-2xl px-6 py-4 text-base font-bold"><Icon icon="lucide:arrow-right" width="22" /> Hire Me</Link>
           <div className="mt-7 inline-flex items-center gap-2 text-sm text-[var(--app-text-muted)]"><Icon icon="lucide:award" className="text-[var(--app-accent-strong)]" width="19" /> Portfolio of the day <span className="ml-1 flex gap-1 text-[var(--app-accent-strong)]" aria-label="5 out of 5 stars">{[1, 2, 3, 4, 5].map((star) => <Icon key={star} icon="lucide:star" width="17" />)}</span></div>
         </div>

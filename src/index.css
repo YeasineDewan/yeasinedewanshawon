@@ -2,33 +2,22 @@
 @config "../tailwind.config.js";
 
 :root {
-  --app-bg: #eef4ef;
-  --app-surface: #fbfefc;
-  --app-surface-muted: #e4eee7;
-  --app-text: #17211b;
-  --app-text-muted: #66736a;
-  --app-border: #dce4dd;
-  --app-accent: #1f7a52;
-  --app-accent-strong: #145c3c;
-  --app-accent-soft: #dff2e8;
-  --app-focus: #e5b95c;
+  --app-bg: #050806;
+  --app-surface: #0a110d;
+  --app-surface-muted: #101b14;
+  --app-text: #f0fff4;
+  --app-text-muted: #91a99a;
+  --app-border: #1c3425;
+  --app-accent: #5dff75;
+  --app-accent-strong: #19d94a;
+  --app-accent-soft: #12351b;
+  --app-focus: #d7ff63;
+  --app-glow: rgba(93,255,117,.28);
 }
 
-.dark {
-  --app-bg: #0c120f;
-  --app-surface: #121b16;
-  --app-surface-muted: #18251d;
-  --app-text: #f1f6f2;
-  --app-text-muted: #a7b7ad;
-  --app-border: #2b3b31;
-  --app-accent: #65d49a;
-  --app-accent-strong: #9ae8bb;
-  --app-accent-soft: #183b2a;
-  --app-focus: #f2cf79;
-}
-
+.dark { color-scheme: dark; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: var(--app-bg); }
 body {
   margin: 0;
   min-width: 320px;
@@ -37,102 +26,37 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
 }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .32; background-image: linear-gradient(rgba(93,255,117,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(93,255,117,.035) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, black, transparent 80%); }
 body, button, a, input, textarea, select { transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
 a { color: inherit; text-decoration: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 3px solid var(--app-focus); outline-offset: 3px; }
-::selection { background: var(--app-accent-soft); color: var(--app-text); }
-
-.app-shell { background: var(--app-bg); color: var(--app-text); }
-.surface { background: var(--app-surface); border: 1px solid var(--app-border); }
+:focus-visible { outline: 2px solid var(--app-focus); outline-offset: 3px; }
+::selection { background: var(--app-accent); color: #031007; }
+.app-shell { position: relative; isolation: isolate; background: radial-gradient(circle at 50% -10%, rgba(23,111,43,.18), transparent 38%), var(--app-bg); color: var(--app-text); }
+.surface { background: color-mix(in srgb, var(--app-surface) 92%, transparent); border: 1px solid var(--app-border); }
 .muted { color: var(--app-text-muted); }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
-}
-
-@media (max-width: 640px) {
-  h1 { letter-spacing: -0.04em; }
-}
-
-/* Legacy utility classes retained for existing page sections. */
-.hover\\:glow-blue:hover { box-shadow: 0 0 20px rgba(59, 130, 246, .35); }
-.hover\\:glow-green:hover { box-shadow: 0 0 20px rgba(34, 197, 94, .35); }
-.hover\\:glow-red:hover { box-shadow: 0 0 20px rgba(239, 68, 68, .35); }
-.hover\\:glow-purple:hover { box-shadow: 0 0 20px rgba(147, 51, 234, .35); }
-.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 45px rgba(18, 45, 30, .12); }
-.btn-hover-effect:hover { transform: translateY(-2px); }
-
-.bg-background { background-color: var(--app-bg); }
-.text-foreground { color: var(--app-text); }
-@media (prefers-color-scheme: dark) { }
-.dark .bg-background { background-color: var(--app-bg); }
-.dark .text-foreground { color: var(--app-text); }
-
-/* Keep legacy page sections aligned with the shared portfolio theme. */
+/* Shared neon language for every route, including legacy page markup. */
 .app-shell .bg-black { background-color: var(--app-bg) !important; }
-.app-shell .text-white { color: var(--app-text) !important; }
+.app-shell .text-white, .app-shell .text-gray-100, .app-shell .text-gray-200 { color: var(--app-text) !important; }
 .app-shell .text-gray-300, .app-shell .text-gray-400, .app-shell .text-gray-500 { color: var(--app-text-muted) !important; }
-.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70, .app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface) 88%, transparent) !important; }
-.app-shell .border-white\/10, .app-shell .border-white\/20 { border-color: var(--app-border) !important; }
-.app-shell footer { background: var(--app-surface) !important; border-top: 1px solid var(--app-border) !important; box-shadow: none !important; }
-.footer-shell { background: linear-gradient(180deg, color-mix(in srgb, var(--app-surface) 96%, var(--app-accent) 4%), var(--app-surface)); }
-.footer-cta { background: var(--app-accent); color: var(--app-bg); box-shadow: 0 0 26px color-mix(in srgb, var(--app-accent) 32%, transparent); }
-.footer-cta:hover { background: var(--app-accent-strong); color: var(--app-bg); transform: translateY(-2px); box-shadow: 0 12px 30px color-mix(in srgb, var(--app-accent) 28%, transparent); }
-.theme-toggle { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app-surface) 45%, transparent); }
-.header-nav { isolation: isolate; box-shadow: 0 18px 55px color-mix(in srgb, var(--app-text) 10%, transparent), 0 0 0 1px color-mix(in srgb, var(--app-accent) 7%, transparent); }
-.dark .header-nav { box-shadow: 0 18px 55px rgba(0,0,0,.48), 0 0 28px color-mix(in srgb, var(--app-accent) 16%, transparent); }
-.header-nav::before { content: ''; position: absolute; inset: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, color-mix(in srgb, var(--app-accent) 14%, transparent), transparent 32%, transparent 68%, color-mix(in srgb, var(--app-accent) 10%, transparent)); opacity: .7; z-index: -1; }
-.header-neon-line { position: absolute; left: 9%; right: 9%; bottom: -1px; height: 1px; border-radius: 999px; background: linear-gradient(90deg, transparent, var(--app-accent), var(--app-accent-strong), transparent); box-shadow: 0 0 12px var(--app-accent), 0 0 28px color-mix(in srgb, var(--app-accent) 70%, transparent); opacity: .9; }
-.header-nav-scrolled .header-neon-line { opacity: 1; box-shadow: 0 0 16px var(--app-accent), 0 0 36px color-mix(in srgb, var(--app-accent) 75%, transparent); }
-.testimonials-section { border-block: 1px solid color-mix(in srgb, var(--app-accent) 12%, var(--app-border)); }
-.testimonial-card { border-color: color-mix(in srgb, var(--app-accent) 32%, var(--app-border)) !important; box-shadow: 0 20px 60px color-mix(in srgb, var(--app-text) 9%, transparent), 0 0 34px color-mix(in srgb, var(--app-accent) 13%, transparent) !important; }
-.testimonial-avatar { color: var(--app-bg); background: linear-gradient(135deg, var(--app-accent), var(--app-accent-strong)); box-shadow: 0 0 0 6px color-mix(in srgb, var(--app-accent) 12%, transparent), 0 0 28px color-mix(in srgb, var(--app-accent) 30%, transparent); }
-.testimonial-card blockquote { text-wrap: pretty; }
-@media (max-width: 640px) { .testimonial-card .p-8 { padding: 1.25rem; } }
-.app-shell .text-gray-200, .app-shell .text-gray-100 { color: var(--app-text) !important; }
 .app-shell .text-gray-700, .app-shell .text-gray-800 { color: var(--app-text) !important; }
 .app-shell .bg-white { background-color: var(--app-surface) !important; }
+.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70, .app-shell .bg-black\/40 { background: color-mix(in srgb, var(--app-surface) 92%, transparent) !important; }
+.app-shell .border-white\/10, .app-shell .border-white\/20 { border-color: var(--app-border) !important; }
+.app-shell footer { background: linear-gradient(180deg, #071009, #040705) !important; border-top: 1px solid var(--app-border) !important; }
+.app-shell input, .app-shell textarea, .app-shell select { background: var(--app-surface) !important; border-color: var(--app-border) !important; color: var(--app-text) !important; }
+.app-shell input:focus, .app-shell textarea:focus, .app-shell select:focus { border-color: var(--app-accent) !important; box-shadow: 0 0 0 3px rgba(93,255,117,.12), 0 0 24px rgba(93,255,117,.12) !important; }
+.app-shell .project-card, .app-shell .service-card, .app-shell .lab-card, .app-shell [class*="rounded-xl"][class*="border"] { background: color-mix(in srgb, var(--app-surface) 94%, transparent); border-color: var(--app-border); color: var(--app-text); }
+.app-shell .project-card:hover, .app-shell .service-card:hover, .app-shell .lab-card:hover { border-color: var(--app-accent) !important; box-shadow: 0 0 0 1px var(--app-accent), 0 18px 50px rgba(0,0,0,.32), 0 0 28px var(--app-glow) !important; transform: translateY(-4px); }
 
-/* Shared portfolio surfaces stay legible in both themes while preserving the neon accent language. */
-.app-shell .bg-gray-900\/50, .app-shell .bg-gray-900\/70 {
-  color: var(--app-text) !important;
-  border-color: var(--app-border) !important;
-}
-.app-shell .text-gray-300 { color: var(--app-text-muted) !important; }
-.app-shell .text-gray-400 { color: color-mix(in srgb, var(--app-text-muted) 88%, var(--app-text)) !important; }
-.app-shell input::placeholder, .app-shell textarea::placeholder { color: var(--app-text-muted) !important; opacity: .85; }
-.app-shell .project-card, .app-shell .service-card, .app-shell .lab-card {
-  background: color-mix(in srgb, var(--app-surface) 94%, transparent);
-  border-color: var(--app-border);
-  color: var(--app-text);
-}
-.app-shell .project-card:hover, .app-shell .service-card:hover, .app-shell .lab-card:hover {
-  border-color: var(--app-accent);
-  box-shadow: 0 20px 50px color-mix(in srgb, var(--app-accent) 16%, transparent);
-}
-.app-shell .project-card img, .app-shell .service-card img, .app-shell .lab-card img {
-  display: block;
-  object-fit: cover;
-}
-.app-shell .project-card .chip, .app-shell .service-card .chip { color: var(--app-bg); }
-.app-shell .bg-black\/40 { background-color: color-mix(in srgb, var(--app-surface-muted) 86%, transparent) !important; }
-.app-shell .border-white\/10 { border-color: var(--app-border) !important; }
-.app-shell .text-white { color: var(--app-text) !important; }
-
-@media (max-width: 767px) {
-  .app-shell .project-card, .app-shell .service-card, .app-shell .lab-card { border-radius: 1.25rem; }
-  .app-shell .project-card .card-footer { padding-inline: 1.25rem; }
-}
-
-.app-shell .lab-card { border-color: var(--app-border) !important; background: color-mix(in srgb, var(--app-surface) 94%, transparent) !important; box-shadow: 0 16px 42px color-mix(in srgb, var(--app-text) 7%, transparent); }
-.app-shell .lab-card:hover { border-color: color-mix(in srgb, var(--app-accent) 68%, var(--app-border)) !important; box-shadow: 0 20px 56px color-mix(in srgb, var(--app-accent) 15%, transparent); }
-.app-shell .lab-tabs { background: color-mix(in srgb, var(--app-surface) 90%, transparent); border-color: var(--app-border); }
-.app-shell .lab-metric { background: color-mix(in srgb, var(--app-surface-muted) 72%, transparent); border-color: var(--app-border); color: var(--app-text); }
-.app-shell .lab-metric svg { color: var(--app-accent); }
+.header-nav { background: rgba(7,15,9,.78) !important; border-color: var(--app-border) !important; box-shadow: 0 14px 50px rgba(0,0,0,.4), 0 0 28px rgba(93,255,117,.07); }
+.header-nav::before { content: ''; position: absolute; inset: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(110deg, rgba(93,255,117,.12), transparent 28%, transparent 72%, rgba(93,255,117,.08)); z-index: -1; }
+.header-neon-line { position: absolute; left: 10%; right: 10%; bottom: -1px; height: 1px; background: linear-gradient(90deg, transparent, var(--app-accent), transparent); box-shadow: 0 0 16px var(--app-accent); }
+.footer-shell { background: linear-gradient(180deg, #071009, #040705); }
+.footer-cta { background: var(--app-accent); color: #031007; box-shadow: 0 0 26px rgba(93,255,117,.22); }
+.footer-cta:hover { background: var(--app-focus); color: #031007; transform: translateY(-2px); box-shadow: 0 12px 34px rgba(93,255,117,.3); }
 .dashboard-stat { min-height: 176px; }
 
-@media (max-width: 767px) {
-  .app-shell main { overflow-x: clip; }
-  .app-shell section { scroll-margin-top: 5rem; }
-}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (max-width: 767px) { .app-shell main { overflow-x: clip; } .app-shell section { scroll-margin-top: 5rem; } }

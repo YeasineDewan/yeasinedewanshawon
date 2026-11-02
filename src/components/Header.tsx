@@ -51,7 +51,7 @@ const Header: React.FC = () => {
         <nav aria-label="Primary navigation" className={`header-nav relative mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--app-border)] bg-[color-mix(in_srgb,var(--app-surface)_88%,transparent)] px-2.5 py-2 shadow-xl shadow-black/20 backdrop-blur-xl sm:px-3 ${isScrolled ? 'header-nav-scrolled' : ''}`}><span aria-hidden="true" className="header-neon-line" />
           <Link to="/" className="flex min-w-0 items-center gap-2.5 rounded-xl px-2 py-1.5 hover:bg-[var(--app-surface-muted)]" aria-label="Go to homepage">
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[var(--app-accent)] text-[var(--app-bg)] shadow-sm"><Icon icon="lucide:code-2" /></span>
-            <span className="hidden min-w-0 sm:block"><span className="block truncate text-sm font-bold tracking-tight text-[var(--app-text)]">Yeasine Dewan</span><span className="block truncate text-[11px] text-[var(--app-text-muted)]">Product &amp; security engineer</span></span>
+            <span className="hidden min-w-0 sm:block"><span className="block truncate text-sm font-bold tracking-tight text-[var(--app-text)]">Yeasine Dewan</span><span className="block truncate text-[11px] text-[var(--app-text-muted)]">Digital systems / security</span></span>
           </Link>
 
           <div className="hidden items-center gap-0.5 md:flex">
